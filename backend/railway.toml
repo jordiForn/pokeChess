@@ -1,10 +1,8 @@
 [build]
-builder = "nixpacks"
-buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction"
+builder = "DOCKERFILE"
+dockerfilePath = "Dockerfile"
 
 [deploy]
-preDeployCommand = "php artisan migrate --force --no-interaction"
-startCommand = "chmod +x ./railway/start.sh && ./railway/start.sh"
 healthcheckPath = "/up"
 healthcheckTimeout = 300
 restartPolicyType = "ON_FAILURE"
