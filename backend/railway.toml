@@ -1,7 +1,3 @@
-[build]
-builder = "nixpacks"
-buildCommand = "composer install --no-dev --optimize-autoloader --no-interaction"
-
 [deploy]
 preDeployCommand = "php artisan migrate --force --no-interaction"
 startCommand = "chmod +x ./railway/start.sh && ./railway/start.sh"
