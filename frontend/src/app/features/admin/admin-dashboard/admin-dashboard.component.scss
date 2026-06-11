@@ -1,0 +1,42 @@
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}

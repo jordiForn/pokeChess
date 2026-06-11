@@ -1,0 +1,57 @@
+.stats-section {
+  margin-bottom: 2rem;
+
+  h2 {
+    margin: 0 0 1rem;
+    font-size: 1.125rem;
+  }
+}
+
+.page-header {
+  margin-bottom: 2rem;
+
+  h1 {
+    margin: 0 0 0.5rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+}
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(14rem, 1fr));
+  gap: 1rem;
+}
+
+.card {
+  display: block;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+  text-decoration: none;
+  color: inherit;
+  transition: border-color 0.2s ease;
+
+  h2 {
+    margin: 0 0 0.5rem;
+    font-size: 1.125rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+    font-size: 0.9375rem;
+  }
+
+  &:hover {
+    border-color: var(--primary);
+  }
+}
+
+.card-admin {
+  border-color: color-mix(in srgb, var(--primary) 35%, var(--border));
+}

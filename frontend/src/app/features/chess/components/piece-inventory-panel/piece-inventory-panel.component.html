@@ -1,0 +1,23 @@
+<div class="inventory-layout">
+  <section class="inventory-side">
+    <h3>Capturas blancas</h3>
+    <div class="inventory-list">
+      @for (piece of capturedByWhite(); track $index) {
+        <img [src]="piece.spriteUrl" [alt]="piece.name" [title]="piece.name" />
+      } @empty {
+        <span class="empty">Sin capturas</span>
+      }
+    </div>
+  </section>
+
+  <section class="inventory-side">
+    <h3>Capturas negras</h3>
+    <div class="inventory-list">
+      @for (piece of capturedByBlack(); track $index) {
+        <img [src]="piece.spriteUrl" [alt]="piece.name" [title]="piece.name" />
+      } @empty {
+        <span class="empty">Sin capturas</span>
+      }
+    </div>
+  </section>
+</div>

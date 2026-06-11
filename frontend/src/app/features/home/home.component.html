@@ -1,0 +1,35 @@
+<section class="page">
+  <header class="page-header">
+    <h1>Bienvenido, {{ user()?.name }}</h1>
+    <p>Entrena estrategia con piezas Pokémon en un tablero de ajedrez clásico.</p>
+  </header>
+
+  <section class="stats-section">
+    <h2>Tus estadísticas</h2>
+    <app-stats-summary [stats]="stats()" />
+  </section>
+
+  <div class="cards">
+    <a class="card" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
+      <h2>Jugar vs IA</h2>
+      <p>Partida singleplayer con reglas Pokémon y turnos automáticos de la IA.</p>
+    </a>
+
+    <a class="card" routerLink="/chess" [queryParams]="{ mode: 'local' }">
+      <h2>Modo local</h2>
+      <p>2 jugadores en el mismo dispositivo, sin IA.</p>
+    </a>
+
+    <a class="card" routerLink="/profile">
+      <h2>Perfil</h2>
+      <p>Actualiza tu nombre, avatar y revisa stats.</p>
+    </a>
+
+    @if (isAdmin()) {
+      <a class="card card-admin" routerLink="/admin">
+        <h2>Administración</h2>
+        <p>Gestiona usuarios y piezas globales.</p>
+      </a>
+    }
+  </div>
+</section>

@@ -1,0 +1,36 @@
+.inventory-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 1rem;
+}
+
+.inventory-side {
+  padding: 0.75rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+
+  h3 {
+    margin: 0 0 0.5rem;
+    font-size: 0.9375rem;
+  }
+}
+
+.inventory-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  min-height: 2.5rem;
+
+  img {
+    width: 2rem;
+    height: 2rem;
+    object-fit: contain;
+  }
+}
+
+.empty {
+  color: var(--muted);
+  font-size: 0.875rem;
+}

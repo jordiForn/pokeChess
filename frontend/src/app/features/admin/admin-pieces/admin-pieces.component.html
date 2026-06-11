@@ -1,0 +1,95 @@
+<section class="page">
+  <app-admin-nav />
+
+  <header class="page-header">
+    <h1>Piezas Pokémon</h1>
+    <button type="button" (click)="startCreate()">Nueva pieza</button>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>{{ editingId() === null ? 'Crear pieza' : 'Editar pieza' }}</h2>
+
+    <label>
+      Bando
+      <select formControlName="side">
+        @for (side of sides; track side) {
+          <option [value]="side">{{ side }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Tipo de pieza
+      <select formControlName="chess_type">
+        @for (type of chessTypes; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Pokémon
+      <input type="text" formControlName="pokemon_name" />
+    </label>
+
+    <label>
+      Tipo Pokémon
+      <select formControlName="pokemon_type">
+        @for (type of pokemonTypes; track type) {
+          <option [value]="type">{{ type }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Sprite URL
+      <input type="url" formControlName="sprite_url" />
+    </label>
+
+    <button type="submit">{{ editingId() === null ? 'Crear' : 'Guardar' }}</button>
+  </form>
+
+  @if (loading()) {
+    <p class="muted">Cargando...</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Sprite</th>
+            <th>Bando</th>
+            <th>Pieza</th>
+            <th>Pokémon</th>
+            <th>Tipo</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (piece of pieces(); track piece.id) {
+            <tr>
+              <td>
+                <img class="sprite" [src]="piece.sprite_url" [alt]="piece.pokemon_name" />
+              </td>
+              <td>{{ piece.side }}</td>
+              <td>{{ piece.chess_type }}</td>
+              <td>{{ piece.pokemon_name }}</td>
+              <td>{{ piece.pokemon_type }}</td>
+              <td class="actions">
+                <button type="button" (click)="startEdit(piece)">Editar</button>
+                <button type="button" class="danger" (click)="deletePiece(piece)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

@@ -1,0 +1,88 @@
+<section class="page">
+  <app-admin-nav />
+
+  <header class="page-header">
+    <h1>Usuarios</h1>
+    <button type="button" (click)="startCreate()">Nuevo usuario</button>
+  </header>
+
+  @if (errorMessage()) {
+    <p class="error">{{ errorMessage() }}</p>
+  }
+
+  @if (successMessage()) {
+    <p class="success">{{ successMessage() }}</p>
+  }
+
+  <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
+    <h2>{{ editingId() === null ? 'Crear usuario' : 'Editar usuario' }}</h2>
+
+    <label>
+      Nombre
+      <input type="text" formControlName="name" />
+    </label>
+
+    <label>
+      Email
+      <input type="email" formControlName="email" />
+    </label>
+
+    <label>
+      Contraseña
+      <input type="password" formControlName="password" [placeholder]="editingId() ? 'Dejar vacío para no cambiar' : ''" />
+    </label>
+
+    <label>
+      Confirmar contraseña
+      <input type="password" formControlName="password_confirmation" />
+    </label>
+
+    <label>
+      Rol
+      <select formControlName="role">
+        @for (role of roles; track role) {
+          <option [value]="role">{{ role }}</option>
+        }
+      </select>
+    </label>
+
+    <label>
+      Avatar (URL)
+      <input type="url" formControlName="avatar" />
+    </label>
+
+    <button type="submit">{{ editingId() === null ? 'Crear' : 'Guardar' }}</button>
+  </form>
+
+  @if (loading()) {
+    <p class="muted">Cargando...</p>
+  } @else {
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nombre</th>
+            <th>Email</th>
+            <th>Rol</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (user of users(); track user.id) {
+            <tr>
+              <td>{{ user.id }}</td>
+              <td>{{ user.name }}</td>
+              <td>{{ user.email }}</td>
+              <td>{{ user.role }}</td>
+              <td class="actions">
+                <button type="button" (click)="startEdit(user)">Editar</button>
+                <button type="button" class="danger" (click)="deleteUser(user)">Eliminar</button>
+              </td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+</section>

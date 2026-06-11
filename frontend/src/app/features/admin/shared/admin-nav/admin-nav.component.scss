@@ -1,0 +1,15 @@
+.admin-nav {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+
+  a {
+    color: var(--muted);
+    text-decoration: none;
+
+    &.active,
+    &:hover {
+      color: var(--primary);
+    }
+  }
+}

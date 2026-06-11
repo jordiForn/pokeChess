@@ -1,0 +1,17 @@
+<header class="navbar">
+  <a class="brand" routerLink="/home">Pokemon Chess</a>
+
+  <nav class="links">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
+    <a routerLink="/chess" routerLinkActive="active">Ajedrez</a>
+    <a routerLink="/profile" routerLinkActive="active">Perfil</a>
+    @if (isAdmin()) {
+      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+    }
+  </nav>
+
+  <div class="user-area">
+    <span class="user-name">{{ user()?.name }}</span>
+    <button type="button" (click)="logout()">Salir</button>
+  </div>
+</header>

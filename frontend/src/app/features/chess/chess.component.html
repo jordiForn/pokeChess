@@ -1,0 +1,31 @@
+<section class="page">
+  <header class="page-header">
+    <div>
+      <h1>Pokemon Chess</h1>
+      <p>
+        @if (vsAi()) {
+          Modo vs IA · Juegas con blancas · Turno: {{ turnLabel() }}
+        } @else {
+          Modo local · 2 jugadores · Turno: {{ turnLabel() }}
+        }
+        @if (aiThinking()) {
+          · IA pensando...
+        }
+      </p>
+    </div>
+
+    <button type="button" (click)="newGame()" [disabled]="aiThinking()">Nueva partida</button>
+  </header>
+
+  @if (pokemonMessage()) {
+    <p class="pokemon-message">{{ pokemonMessage() }}</p>
+  }
+
+  @if (statusMessage()) {
+    <p class="status" [class.game-over]="isGameOver()">{{ statusMessage() }}</p>
+  }
+
+  <app-chess-board />
+  <app-piece-inventory-panel />
+  <app-promotion-modal />
+</section>

@@ -1,0 +1,58 @@
+<div class="board-wrapper" [class.disabled]="!canInteract()" [class.ai-thinking]="aiThinking()">
+  @if (aiThinking()) {
+    <div class="thinking-overlay">IA pensando...</div>
+  }
+
+  <div class="board">
+    @for (row of boardRows(); track $index) {
+      <div class="rank">
+        <span class="coord rank-coord">{{ row[0].rankLabel }}</span>
+
+        @for (square of row; track square.notation) {
+          <button
+            type="button"
+            class="square"
+            [class.light]="square.isLight"
+            [class.dark]="!square.isLight"
+            [class.selected]="isSelected(square.notation)"
+            [class.legal-target]="isLegalTarget(square.notation)"
+            [class.last-move]="isLastMove(square.notation)"
+            [class.invalid-capture]="isInvalidCapture(square.notation)"
+            [class.tooltip-inside-top]="square.row >= 4"
+            [class.tooltip-inside-bottom]="square.row < 4"
+            [attr.aria-label]="squareLabel(square)"
+            (click)="onSquareClick(square.notation)"
+          >
+            @if (square.piece) {
+              <span class="piece-layer">
+                @if (square.piece.pokemon; as pokemon) {
+                  <img class="sprite" [src]="pokemon.spriteUrl" [alt]="pokemon.name" />
+                  <span class="piece-tooltip">
+                    {{ pokemon.name }}
+                    <div>{{ pieceName(square.piece.type) }}</div>
+                    <strong>{{ pokemon.type }}</strong>
+                  </span>
+                } @else {
+                  <span
+                    class="piece"
+                    [class.white]="square.piece.color === 'w'"
+                    [class.black]="square.piece.color === 'b'"
+                  >
+                    {{ square.piece.symbol }}
+                  </span>
+                }
+              </span>
+            }
+          </button>
+        }
+      </div>
+    }
+
+    <div class="files">
+      <span class="coord-spacer"></span>
+      @for (file of ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h']; track file) {
+        <span class="coord file-coord">{{ file }}</span>
+      }
+    </div>
+  </div>
+</div>

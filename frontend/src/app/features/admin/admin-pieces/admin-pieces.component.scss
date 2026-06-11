@@ -1,0 +1,81 @@
+.page-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 1rem;
+
+  h1 {
+    margin: 0;
+  }
+}
+
+.form-card {
+  display: grid;
+  gap: 0.875rem;
+  margin-bottom: 1.5rem;
+  padding: 1.25rem;
+  border: 1px solid var(--border);
+  border-radius: 0.75rem;
+  background: var(--surface);
+
+  h2 {
+    margin: 0;
+    font-size: 1.125rem;
+  }
+}
+
+label {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.table-wrap {
+  overflow-x: auto;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+
+th,
+td {
+  padding: 0.75rem;
+  border-bottom: 1px solid var(--border);
+  text-align: left;
+  vertical-align: middle;
+}
+
+.sprite {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.actions {
+  display: flex;
+  gap: 0.5rem;
+}
+
+.danger {
+  background: var(--danger);
+  border-color: var(--danger);
+}
+
+.error {
+  color: var(--danger);
+}
+
+.success {
+  color: var(--success);
+}
+
+.muted {
+  color: var(--muted);
+}
+
+select {
+  padding: 0.625rem;
+}

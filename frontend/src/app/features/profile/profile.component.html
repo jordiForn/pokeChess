@@ -1,0 +1,50 @@
+<section class="page page-narrow">
+  <header class="page-header">
+    <h1>Perfil</h1>
+    <p>Gestiona tu información de cuenta y revisa tu historial.</p>
+  </header>
+
+  @if (loading()) {
+    <p class="muted">Cargando perfil...</p>
+  } @else {
+    @if (successMessage()) {
+      <p class="success">{{ successMessage() }}</p>
+    }
+
+    @if (errorMessage()) {
+      <p class="error">{{ errorMessage() }}</p>
+    }
+
+    <section class="stats-section">
+      <h2>Estadísticas de partidas</h2>
+      <app-stats-summary [stats]="stats()" />
+    </section>
+
+    <form [formGroup]="form" (ngSubmit)="submit()" class="form-card">
+      <h2>Datos de cuenta</h2>
+
+      <label>
+        Nombre
+        <input type="text" formControlName="name" autocomplete="name" />
+      </label>
+
+      <label>
+        Email
+        <input type="email" formControlName="email" />
+      </label>
+
+      <label>
+        Avatar (URL)
+        <input type="url" formControlName="avatar" placeholder="https://..." />
+      </label>
+
+      @if (form.controls.avatar.value) {
+        <img class="avatar-preview" [src]="form.controls.avatar.value" alt="Vista previa del avatar" />
+      }
+
+      <button type="submit" [disabled]="form.invalid || saving()">
+        {{ saving() ? 'Guardando...' : 'Guardar cambios' }}
+      </button>
+    </form>
+  }
+</section>
