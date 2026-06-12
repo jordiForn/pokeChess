@@ -1,25 +1,25 @@
 <aside class="sidebar">
   <a class="brand" routerLink="/home">
-    <span class="brand-icon">♟</span>
+    <span class="brand-icon"><app-icon name="chess-knight" /></span>
     <span class="brand-text">PokeChess</span>
   </a>
 
   <nav class="nav-links">
     <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
-      <span class="nav-icon">⌂</span>
+      <span class="nav-icon"><app-icon name="house" /></span>
       <span>Inicio</span>
     </a>
     <a routerLink="/chess" routerLinkActive="active">
-      <span class="nav-icon">♞</span>
+      <span class="nav-icon"><app-icon name="chess-board" /></span>
       <span>Jugar</span>
     </a>
     <a routerLink="/profile" routerLinkActive="active">
-      <span class="nav-icon">◉</span>
+      <span class="nav-icon"><app-icon name="user" /></span>
       <span>Perfil</span>
     </a>
     @if (isAdmin()) {
       <a routerLink="/admin" routerLinkActive="active">
-        <span class="nav-icon">⚙</span>
+        <span class="nav-icon"><app-icon name="gear" /></span>
         <span>Admin</span>
       </a>
     }
@@ -34,6 +34,9 @@
       }
       <span class="user-name">{{ user()?.name }}</span>
     </a>
-    <button type="button" class="logout-btn" (click)="logout()">Salir</button>
+    <button type="button" class="logout-btn secondary" (click)="logout()">
+      <app-icon name="right-from-bracket" />
+      Salir
+    </button>
   </div>
 </aside>

@@ -128,6 +128,9 @@ export class AlertService {
       'The sprite url field must be a valid URL.': 'La URL del sprite no es válida.',
       'Unauthenticated.': 'Debes iniciar sesión.',
       'Unauthorized.': 'No tienes permisos para esta acción.',
+      'passwords.token': 'El enlace de recuperación no es válido o ha expirado.',
+      'passwords.user': 'No encontramos ningún usuario con ese email.',
+      'passwords.throttled': 'Espera antes de volver a solicitar otro enlace.',
     };
 
     return translations[message] ?? message;

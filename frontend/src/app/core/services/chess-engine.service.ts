@@ -13,6 +13,7 @@ import { GameStateService } from './game-state.service';
 import { PieceInventoryService } from './piece-inventory.service';
 import { StatsService } from './stats.service';
 import { TypeEffectivenessService } from './type-effectiveness.service';
+import { VercelObservabilityService } from './vercel-observability.service';
 import { GameResult } from '../../shared/models/game-result.model';
 import { GameMode } from '../../shared/models/game-mode.model';
 import { PROMOTION_OPTIONS, PromotionOptionView } from '../../shared/models/promotion.model';
@@ -36,6 +37,7 @@ export class ChessEngineService {
   private readonly aiService = inject(ChessAiService);
   private readonly statsService = inject(StatsService);
   private readonly inventory = inject(PieceInventoryService);
+  private readonly observability = inject(VercelObservabilityService);
 
   private chess = new Chess();
   private aiMoveTimeout: number | null = null;
@@ -50,6 +52,7 @@ export class ChessEngineService {
     this.inventory.initialize(this.chess, this.chessState.piecesConfig());
     this.syncState();
     this.scheduleAiTurnIfNeeded();
+    this.trackGameStart(mode, playerColor);
   }
 
   isPlayerTurn(): boolean {
@@ -565,6 +568,10 @@ export class ChessEngineService {
     }
 
     this.statsService.recordResult(result).subscribe();
+    this.observability.trackEvent('game_end', {
+      mode: this.gameState.vsAi() ? 'ai' : 'local',
+      result,
+    });
   }
 
   private scheduleAiTurnIfNeeded(): void {
@@ -606,5 +613,12 @@ export class ChessEngineService {
 
   private randomPlayerColor(): BoardColor {
     return Math.random() < 0.5 ? 'w' : 'b';
+  }
+
+  private trackGameStart(mode: GameMode, playerColor: BoardColor): void {
+    this.observability.trackEvent('game_start', {
+      mode,
+      player_color: playerColor,
+    });
   }
 }

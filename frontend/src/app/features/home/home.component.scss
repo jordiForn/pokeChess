@@ -85,8 +85,16 @@
 }
 
 .action-icon {
-  font-size: 1.5rem;
-  line-height: 1;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 2.25rem;
+  height: 2.25rem;
+  border-radius: 0.625rem;
+  background: color-mix(in srgb, var(--primary) 18%, transparent);
+  color: var(--primary);
+  font-size: 1.125rem;
+  flex-shrink: 0;
 }
 
 .action-copy {
@@ -147,8 +155,7 @@
   border-radius: 0.625rem;
   background: var(--surface-tertiary);
   color: var(--primary);
-  font-size: 1.25rem;
-  font-weight: 700;
+  font-size: 1.125rem;
 }
 
 .feature-admin .feature-icon {

@@ -4,9 +4,10 @@
       <h1>Pokemon Chess</h1>
       <p>
         @if (vsAi()) {
-          Modo vs IA · Juegas con {{ playerColorLabel() }} · Turno: {{ turnLabel() }}
+          <app-icon name="robot" /> Modo vs IA · Juegas con {{ playerColorLabel() }} · Turno:
+          {{ turnLabel() }}
         } @else {
-          Modo local · 2 jugadores · Turno: {{ turnLabel() }}
+          <app-icon name="users" /> Modo local · 2 jugadores · Turno: {{ turnLabel() }}
         }
         @if (aiThinking()) {
           · IA pensando...

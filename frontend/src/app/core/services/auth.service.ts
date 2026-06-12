@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
 import { Observable, catchError, finalize, firstValueFrom, map, of, tap } from 'rxjs';
 import { environment } from '../../../environments/environment';
-import { AuthResponse, LoginRequest, RegisterRequest } from '../../shared/models/auth.model';
+import { AuthResponse, ForgotPasswordRequest, LoginRequest, MessageResponse, RegisterRequest, ResetPasswordRequest } from '../../shared/models/auth.model';
 import { User } from '../../shared/models/user.model';
 import { AuthStateService } from './auth-state.service';
 
@@ -70,6 +70,14 @@ export class AuthService {
         return of(undefined);
       }),
     );
+  }
+
+  requestPasswordReset(payload: ForgotPasswordRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/forgot-password`, payload);
+  }
+
+  resetPassword(payload: ResetPasswordRequest): Observable<MessageResponse> {
+    return this.http.post<MessageResponse>(`${this.apiUrl}/reset-password`, payload);
   }
 
   clearSession(): void {

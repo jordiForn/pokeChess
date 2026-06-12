@@ -14,14 +14,14 @@
     <section class="quick-actions card-surface">
       <h2>Jugar ahora</h2>
       <a class="action-btn action-primary" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
-        <span class="action-icon">🤖</span>
+        <span class="action-icon"><app-icon name="robot" /></span>
         <span class="action-copy">
           <strong>Partida vs IA</strong>
           <small>Reglas Pokémon · turnos automáticos</small>
         </span>
       </a>
       <a class="action-btn" routerLink="/chess" [queryParams]="{ mode: 'local' }">
-        <span class="action-icon">👥</span>
+        <span class="action-icon"><app-icon name="users" /></span>
         <span class="action-copy">
           <strong>Modo local</strong>
           <small>2 jugadores en el mismo dispositivo</small>
@@ -31,20 +31,20 @@
 
     <section class="feature-cards">
       <a class="feature-card card-surface" routerLink="/profile">
-        <div class="feature-icon">◉</div>
+        <div class="feature-icon"><app-icon name="user" /></div>
         <h3>Perfil</h3>
         <p>Actualiza tu nombre, avatar y revisa estadísticas.</p>
       </a>
 
       <a class="feature-card card-surface" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
-        <div class="feature-icon">♞</div>
+        <div class="feature-icon"><app-icon name="chess-board" /></div>
         <h3>Tablero</h3>
         <p>Continúa tu última partida o empieza una nueva.</p>
       </a>
 
       @if (isAdmin()) {
         <a class="feature-card card-surface feature-admin" routerLink="/admin">
-          <div class="feature-icon">⚙</div>
+          <div class="feature-icon"><app-icon name="gear" /></div>
           <h3>Administración</h3>
           <p>Gestiona usuarios y piezas globales del juego.</p>
         </a>

@@ -9,10 +9,11 @@ import { GameMode } from '../../shared/models/game-mode.model';
 import { ChessBoardComponent } from './components/chess-board/chess-board.component';
 import { PieceInventoryPanelComponent } from './components/piece-inventory-panel/piece-inventory-panel.component';
 import { PromotionModalComponent } from './components/promotion-modal/promotion-modal.component';
+import { IconComponent } from '../../shared/components/icon/icon.component';
 
 @Component({
   selector: 'app-chess',
-  imports: [ChessBoardComponent, PieceInventoryPanelComponent, PromotionModalComponent],
+  imports: [ChessBoardComponent, PieceInventoryPanelComponent, PromotionModalComponent, IconComponent],
   templateUrl: './chess.component.html',
   styleUrl: './chess.component.scss',
 })

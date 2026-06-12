@@ -29,6 +29,11 @@
   p {
     margin: 0;
     color: var(--muted);
+    display: inline-flex;
+    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.35rem;
   }
 }
 

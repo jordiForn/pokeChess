@@ -5,8 +5,10 @@ import { guestGuard } from './core/guards/guest.guard';
 import { AdminDashboardComponent } from './features/admin/admin-dashboard/admin-dashboard.component';
 import { AdminPiecesComponent } from './features/admin/admin-pieces/admin-pieces.component';
 import { AdminUsersComponent } from './features/admin/admin-users/admin-users.component';
+import { ForgotPasswordComponent } from './features/auth/forgot-password/forgot-password.component';
 import { LoginComponent } from './features/auth/login/login.component';
 import { RegisterComponent } from './features/auth/register/register.component';
+import { ResetPasswordComponent } from './features/auth/reset-password/reset-password.component';
 import { ChessComponent } from './features/chess/chess.component';
 import { HomeComponent } from './features/home/home.component';
 import { ProfileComponent } from './features/profile/profile.component';
@@ -15,6 +17,8 @@ import { MainLayoutComponent } from './shared/components/main-layout/main-layout
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [guestGuard] },
   { path: 'register', component: RegisterComponent, canActivate: [guestGuard] },
+  { path: 'forgot-password', component: ForgotPasswordComponent, canActivate: [guestGuard] },
+  { path: 'reset-password', component: ResetPasswordComponent, canActivate: [guestGuard] },
   {
     path: '',
     component: MainLayoutComponent,

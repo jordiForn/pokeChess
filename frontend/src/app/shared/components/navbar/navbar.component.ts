@@ -3,9 +3,11 @@ import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 
+import { IconComponent } from '../icon/icon.component';
+
 @Component({
   selector: 'app-navbar',
-  imports: [RouterLink, RouterLinkActive],
+  imports: [RouterLink, RouterLinkActive, IconComponent],
   templateUrl: './navbar.component.html',
   styleUrl: './navbar.component.scss',
 })
