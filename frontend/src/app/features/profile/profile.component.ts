@@ -4,6 +4,7 @@ import { AuthStateService } from '../../core/services/auth-state.service';
 import { StatsService } from '../../core/services/stats.service';
 import { UserService } from '../../core/services/user.service';
 import { UserStateService } from '../../core/services/user-state.service';
+import { AlertService } from '../../core/services/alert.service';
 import { StatsSummaryComponent } from '../../shared/components/stats-summary/stats-summary.component';
 
 @Component({
@@ -18,11 +19,10 @@ export class ProfileComponent implements OnInit {
   private readonly statsService = inject(StatsService);
   private readonly authState = inject(AuthStateService);
   private readonly userState = inject(UserStateService);
+  private readonly alert = inject(AlertService);
 
   protected readonly loading = signal(true);
   protected readonly saving = signal(false);
-  protected readonly successMessage = signal<string | null>(null);
-  protected readonly errorMessage = signal<string | null>(null);
   protected readonly user = this.authState.user;
   protected readonly stats = this.userState.stats;
 
@@ -44,7 +44,7 @@ export class ProfileComponent implements OnInit {
         } else {
           this.loading.set(false);
         }
-        this.errorMessage.set('No se pudo cargar el perfil.');
+        void this.alert.error('No se pudo cargar el perfil.');
       },
     });
   }
@@ -56,8 +56,6 @@ export class ProfileComponent implements OnInit {
     }
 
     this.saving.set(true);
-    this.successMessage.set(null);
-    this.errorMessage.set(null);
 
     const { name, avatar } = this.form.getRawValue();
 
@@ -69,16 +67,12 @@ export class ProfileComponent implements OnInit {
       .subscribe({
         next: (user) => {
           this.patchForm(user);
-          this.successMessage.set('Perfil actualizado.');
           this.saving.set(false);
+          void this.alert.success('Perfil actualizado.');
         },
-        error: (error: { error?: { message?: string; errors?: Record<string, string[]> } }) => {
-          const validationError = error?.error?.errors;
-          const firstError = validationError
-            ? Object.values(validationError)[0]?.[0]
-            : null;
-          this.errorMessage.set(firstError ?? error?.error?.message ?? 'No se pudo guardar el perfil.');
+        error: (error) => {
           this.saving.set(false);
+          void this.alert.showHttpError(error, 'No se pudo guardar el perfil.');
         },
       });
   }

@@ -7,14 +7,6 @@
   @if (loading()) {
     <p class="muted">Cargando perfil...</p>
   } @else {
-    @if (successMessage()) {
-      <p class="success">{{ successMessage() }}</p>
-    }
-
-    @if (errorMessage()) {
-      <p class="error">{{ errorMessage() }}</p>
-    }
-
     <section class="stats-section">
       <h2>Estadísticas de partidas</h2>
       <app-stats-summary [stats]="stats()" />

@@ -6,14 +6,6 @@
     <button type="button" (click)="startCreate()">Nuevo usuario</button>
   </header>
 
-  @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  }
-
-  @if (successMessage()) {
-    <p class="success">{{ successMessage() }}</p>
-  }
-
   <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
     <h2>{{ editingId() === null ? 'Crear usuario' : 'Editar usuario' }}</h2>
 

@@ -2,6 +2,7 @@ import { Component, inject, OnInit, signal } from '@angular/core';
 import { NonNullableFormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { AdminService } from '../../../core/services/admin.service';
 import { AdminStateService } from '../../../core/services/admin-state.service';
+import { AlertService } from '../../../core/services/alert.service';
 import { UserRole } from '../../../shared/models/user-role';
 import { User } from '../../../shared/models/user.model';
 import { AdminNavComponent } from '../shared/admin-nav/admin-nav.component';
@@ -16,12 +17,11 @@ export class AdminUsersComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);
   private readonly adminService = inject(AdminService);
   private readonly adminState = inject(AdminStateService);
+  private readonly alert = inject(AlertService);
 
   protected readonly users = this.adminState.users;
   protected readonly loading = this.adminState.loading;
   protected readonly editingId = signal<number | null>(null);
-  protected readonly errorMessage = signal<string | null>(null);
-  protected readonly successMessage = signal<string | null>(null);
 
   protected readonly roles: UserRole[] = ['user', 'admin'];
 
@@ -37,7 +37,7 @@ export class AdminUsersComponent implements OnInit {
   ngOnInit(): void {
     this.startCreate();
     this.adminService.loadUsers().subscribe({
-      error: () => this.errorMessage.set('No se pudieron cargar los usuarios.'),
+      error: () => void this.alert.error('No se pudieron cargar los usuarios.'),
     });
   }
 
@@ -79,9 +79,6 @@ export class AdminUsersComponent implements OnInit {
       return;
     }
 
-    this.errorMessage.set(null);
-    this.successMessage.set(null);
-
     const raw = this.form.getRawValue();
     const payload = {
       name: raw.name,
@@ -97,40 +94,32 @@ export class AdminUsersComponent implements OnInit {
     if (editingId === null) {
       this.adminService.createUser(payload).subscribe({
         next: () => {
-          this.successMessage.set('Usuario creado.');
+          void this.alert.success('Usuario creado.');
           this.startCreate();
         },
-        error: (error) => this.errorMessage.set(this.extractError(error)),
+        error: (error) => void this.alert.showHttpError(error),
       });
       return;
     }
 
     this.adminService.updateUser(editingId, payload).subscribe({
       next: () => {
-        this.successMessage.set('Usuario actualizado.');
+        void this.alert.success('Usuario actualizado.');
         this.startCreate();
       },
-      error: (error) => this.errorMessage.set(this.extractError(error)),
+      error: (error) => void this.alert.showHttpError(error),
     });
   }
 
-  protected deleteUser(user: User): void {
-    if (!confirm(`¿Eliminar a ${user.name}?`)) {
+  protected async deleteUser(user: User): Promise<void> {
+    const confirmed = await this.alert.confirm('Eliminar usuario', `¿Eliminar a ${user.name}?`);
+    if (!confirmed) {
       return;
     }
 
     this.adminService.deleteUser(user.id).subscribe({
-      next: () => this.successMessage.set('Usuario eliminado.'),
-      error: (error) => this.errorMessage.set(this.extractError(error)),
+      next: () => void this.alert.success('Usuario eliminado.'),
+      error: (error) => void this.alert.showHttpError(error),
     });
-  }
-
-  private extractError(error: { error?: { message?: string; errors?: Record<string, string[]> } }): string {
-    const validationError = error?.error?.errors;
-    if (validationError) {
-      return Object.values(validationError)[0]?.[0] ?? 'Error de validación.';
-    }
-
-    return error?.error?.message ?? 'Operación fallida.';
   }
 }

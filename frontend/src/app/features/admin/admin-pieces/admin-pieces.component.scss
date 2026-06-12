@@ -54,6 +54,18 @@ td {
   object-fit: contain;
 }
 
+.sprite-preview-block {
+  display: flex;
+  align-items: center;
+  min-height: 4rem;
+}
+
+.sprite-preview {
+  width: 4rem;
+  height: 4rem;
+  object-fit: contain;
+}
+
 .actions {
   display: flex;
   gap: 0.5rem;

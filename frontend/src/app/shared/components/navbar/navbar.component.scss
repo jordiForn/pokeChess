@@ -35,6 +35,35 @@
   gap: 0.75rem;
 }
 
+.user-profile {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.user-avatar,
+.user-avatar-fallback {
+  width: 2rem;
+  height: 2rem;
+  border-radius: 999px;
+  flex-shrink: 0;
+}
+
+.user-avatar {
+  object-fit: cover;
+  border: 1px solid var(--border);
+}
+
+.user-avatar-fallback {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--primary) 16%, white);
+  color: var(--primary);
+  font-size: 0.75rem;
+  font-weight: 700;
+}
+
 .user-name {
   color: var(--muted);
   font-size: 0.875rem;

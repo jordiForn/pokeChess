@@ -11,7 +11,14 @@
   </nav>
 
   <div class="user-area">
-    <span class="user-name">{{ user()?.name }}</span>
+    <div class="user-profile">
+      @if (user()?.avatar; as avatar) {
+        <img class="user-avatar" [src]="avatar" [alt]="user()?.name ?? 'Avatar'" />
+      } @else {
+        <span class="user-avatar-fallback">{{ initials() }}</span>
+      }
+      <span class="user-name">{{ user()?.name }}</span>
+    </div>
     <button type="button" (click)="logout()">Salir</button>
   </div>
 </header>

@@ -6,14 +6,6 @@
     <button type="button" (click)="startCreate()">Nueva pieza</button>
   </header>
 
-  @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  }
-
-  @if (successMessage()) {
-    <p class="success">{{ successMessage() }}</p>
-  }
-
   <form class="form-card" [formGroup]="form" (ngSubmit)="submit()">
     <h2>{{ editingId() === null ? 'Crear pieza' : 'Editar pieza' }}</h2>
 
@@ -37,7 +29,7 @@
 
     <label>
       Pokémon
-      <input type="text" formControlName="pokemon_name" />
+      <input type="text" formControlName="pokemon_name" placeholder="Ej. gengar" autocomplete="off" />
     </label>
 
     <label>
@@ -49,10 +41,15 @@
       </select>
     </label>
 
-    <label>
-      Sprite URL
-      <input type="url" formControlName="sprite_url" />
-    </label>
+    <div class="sprite-preview-block">
+      @if (fetchingSprite()) {
+        <span class="muted">Buscando sprite en PokeAPI...</span>
+      } @else if (spritePreview(); as preview) {
+        <img class="sprite-preview" [src]="preview" alt="Vista previa del Pokémon" />
+      } @else {
+        <span class="muted">El sprite se cargará al escribir el nombre.</span>
+      }
+    </div>
 
     <button type="submit">{{ editingId() === null ? 'Crear' : 'Guardar' }}</button>
   </form>

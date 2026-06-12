@@ -1,9 +1,10 @@
-import { Component, computed, inject, OnInit } from '@angular/core';
+import { Component, effect, inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { ChessEngineService } from '../../core/services/chess-engine.service';
 import { ChessStateService } from '../../core/services/chess-state.service';
 import { GameStateService } from '../../core/services/game-state.service';
 import { PieceService } from '../../core/services/piece.service';
+import { AlertService } from '../../core/services/alert.service';
 import { GameMode } from '../../shared/models/game-mode.model';
 import { ChessBoardComponent } from './components/chess-board/chess-board.component';
 import { PieceInventoryPanelComponent } from './components/piece-inventory-panel/piece-inventory-panel.component';
@@ -21,27 +22,58 @@ export class ChessComponent implements OnInit {
   private readonly gameState = inject(GameStateService);
   private readonly pieceService = inject(PieceService);
   private readonly route = inject(ActivatedRoute);
+  private readonly alert = inject(AlertService);
 
   private currentMode: GameMode = 'ai';
+  private lastPokemonMessage: string | null = null;
+  private lastStatusMessage: string | null = null;
 
-  protected readonly pokemonMessage = this.chessState.message;
   protected readonly vsAi = this.gameState.vsAi;
   protected readonly aiThinking = this.gameState.aiThinking;
 
-  protected readonly statusMessage = computed(() => {
-    this.chessState.fen();
-    return this.engine.getStatusMessage();
-  });
-
-  protected readonly turnLabel = computed(() => {
+  protected readonly turnLabel = () => {
     this.chessState.turn();
     return this.engine.getTurnLabel();
-  });
+  };
 
-  protected readonly isGameOver = computed(() => {
+  protected readonly isGameOver = () => {
     this.chessState.fen();
     return this.engine.isGameOver();
-  });
+  };
+
+  constructor() {
+    effect(() => {
+      const message = this.chessState.message();
+      if (message && message !== this.lastPokemonMessage) {
+        this.lastPokemonMessage = message;
+        void this.alert.toast('warning', message);
+      }
+
+      if (!message) {
+        this.lastPokemonMessage = null;
+      }
+    });
+
+    effect(() => {
+      this.chessState.fen();
+      const status = this.engine.getStatusMessage();
+      const gameOver = this.engine.isGameOver();
+
+      if (status && status !== this.lastStatusMessage) {
+        this.lastStatusMessage = status;
+
+        if (gameOver) {
+          void this.alert.info('Fin de la partida', status);
+        } else if (status === 'Jaque.') {
+          void this.alert.toast('info', status);
+        }
+      }
+
+      if (!status) {
+        this.lastStatusMessage = null;
+      }
+    });
+  }
 
   ngOnInit(): void {
     this.route.queryParamMap.subscribe((params) => {
@@ -51,13 +83,18 @@ export class ChessComponent implements OnInit {
   }
 
   protected newGame(): void {
+    this.lastPokemonMessage = null;
+    this.lastStatusMessage = null;
     this.engine.newGame(this.currentMode);
   }
 
   private startNewGame(mode: GameMode): void {
     this.pieceService.loadPieces().subscribe({
       next: () => this.engine.newGame(mode),
-      error: () => this.engine.newGame(mode),
+      error: () => {
+        void this.alert.error('No se pudieron cargar las piezas.');
+        this.engine.newGame(mode);
+      },
     });
   }
 }

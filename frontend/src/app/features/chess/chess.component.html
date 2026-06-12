@@ -17,14 +17,6 @@
     <button type="button" (click)="newGame()" [disabled]="aiThinking()">Nueva partida</button>
   </header>
 
-  @if (pokemonMessage()) {
-    <p class="pokemon-message">{{ pokemonMessage() }}</p>
-  }
-
-  @if (statusMessage()) {
-    <p class="status" [class.game-over]="isGameOver()">{{ statusMessage() }}</p>
-  }
-
   <app-chess-board />
   <app-piece-inventory-panel />
   <app-promotion-modal />

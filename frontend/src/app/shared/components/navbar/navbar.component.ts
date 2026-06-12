@@ -1,5 +1,5 @@
-import { Component, inject } from '@angular/core';
-import { RouterLink, RouterLinkActive, RouterOutlet } from '@angular/router';
+import { Component, computed, inject } from '@angular/core';
+import { RouterLink, RouterLinkActive } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AuthStateService } from '../../../core/services/auth-state.service';
 
@@ -15,6 +15,20 @@ export class NavbarComponent {
 
   protected readonly user = this.authState.user;
   protected readonly isAdmin = this.authState.isAdmin;
+
+  protected readonly initials = computed(() => {
+    const name = this.user()?.name?.trim() ?? '';
+    if (!name) {
+      return '?';
+    }
+
+    return name
+      .split(/\s+/)
+      .map((part) => part[0])
+      .join('')
+      .slice(0, 2)
+      .toUpperCase();
+  });
 
   protected logout(): void {
     this.authService.logout().subscribe(() => {

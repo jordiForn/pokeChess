@@ -1,10 +1,6 @@
 <section class="auth-card">
   <h1>Crear cuenta</h1>
 
-  @if (errorMessage()) {
-    <p class="error">{{ errorMessage() }}</p>
-  }
-
   <form [formGroup]="form" (ngSubmit)="submit()">
     <label>
       Nombre
@@ -26,7 +22,7 @@
       <input type="password" formControlName="password_confirmation" autocomplete="new-password" />
     </label>
 
-    <button type="submit" [disabled]="form.invalid">Registrarse</button>
+    <button type="submit">Registrarse</button>
   </form>
 
   <p class="link">
