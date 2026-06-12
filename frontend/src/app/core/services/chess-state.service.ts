@@ -2,6 +2,7 @@ import { Injectable, signal } from '@angular/core';
 import { Piece } from '../../shared/models/piece.model';
 import { ChessMoveView } from '../../shared/models/chess-board.model';
 import { PendingPromotionView } from '../../shared/models/promotion.model';
+import { ForcedGameResult } from '../../shared/models/forced-game-result.model';
 
 export type BoardColor = 'w' | 'b';
 
@@ -18,6 +19,7 @@ export class ChessStateService {
   private readonly turnSignal = signal<BoardColor>('w');
   private readonly messageSignal = signal<string | null>(null);
   private readonly pendingPromotionSignal = signal<PendingPromotionView | null>(null);
+  private readonly forcedResultSignal = signal<ForcedGameResult | null>(null);
 
   readonly fen = this.fenSignal.asReadonly();
   readonly selectedSquare = this.selectedSquareSignal.asReadonly();
@@ -28,6 +30,7 @@ export class ChessStateService {
   readonly turn = this.turnSignal.asReadonly();
   readonly message = this.messageSignal.asReadonly();
   readonly pendingPromotion = this.pendingPromotionSignal.asReadonly();
+  readonly forcedResult = this.forcedResultSignal.asReadonly();
 
   setFen(fen: string): void {
     this.fenSignal.set(fen);
@@ -65,6 +68,10 @@ export class ChessStateService {
     this.pendingPromotionSignal.set(pending);
   }
 
+  setForcedResult(result: ForcedGameResult | null): void {
+    this.forcedResultSignal.set(result);
+  }
+
   reset(): void {
     this.fenSignal.set('rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR w KQkq - 0 1');
     this.selectedSquareSignal.set(null);
@@ -74,5 +81,6 @@ export class ChessStateService {
     this.turnSignal.set('w');
     this.messageSignal.set(null);
     this.pendingPromotionSignal.set(null);
+    this.forcedResultSignal.set(null);
   }
 }

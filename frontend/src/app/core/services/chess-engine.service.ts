@@ -16,6 +16,7 @@ import { TypeEffectivenessService } from './type-effectiveness.service';
 import { GameResult } from '../../shared/models/game-result.model';
 import { GameMode } from '../../shared/models/game-mode.model';
 import { PROMOTION_OPTIONS, PromotionOptionView } from '../../shared/models/promotion.model';
+import { BoardColor } from './chess-state.service';
 
 const PIECE_SYMBOLS: Record<Color, Record<PieceSymbol, string>> = {
   w: { k: '♔', q: '♕', r: '♖', b: '♗', n: '♘', p: '♙' },
@@ -63,7 +64,7 @@ export class ChessEngineService {
       !this.gameState.aiThinking() &&
       !this.chessState.pendingPromotion() &&
       this.isPlayerTurn() &&
-      !this.chess.isGameOver()
+      !this.isGameOver()
     );
   }
 
@@ -97,7 +98,7 @@ export class ChessEngineService {
       return;
     }
 
-    if (this.chess.isGameOver()) {
+    if (this.isGameOver()) {
       return;
     }
 
@@ -133,7 +134,7 @@ export class ChessEngineService {
   }
 
   tryMove(from: string, to: string, promotion?: PieceSymbol): ChessMoveView | null {
-    if (this.chess.isGameOver()) {
+    if (this.isGameOver()) {
       return null;
     }
 
@@ -240,7 +241,7 @@ export class ChessEngineService {
   }
 
   isGameOver(): boolean {
-    return this.chess.isGameOver();
+    return this.chess.isGameOver() || this.chessState.forcedResult() !== null;
   }
 
   getPromotionOptions(): PromotionOptionView[] {
@@ -272,6 +273,11 @@ export class ChessEngineService {
   }
 
   getStatusMessage(): string | null {
+    const forced = this.chessState.forcedResult();
+    if (forced) {
+      return forced.message;
+    }
+
     if (this.chess.isCheckmate()) {
       const winner = this.chess.turn() === 'w' ? 'Negras' : 'Blancas';
       return `Jaque mate. Ganan ${winner}.`;
@@ -282,6 +288,14 @@ export class ChessEngineService {
     }
 
     if (this.chess.isDraw()) {
+      if (this.chess.isInsufficientMaterial()) {
+        return 'Tablas por material insuficiente.';
+      }
+
+      if (this.chess.isStalemate()) {
+        return 'Tablas por ahogado.';
+      }
+
       return 'Tablas.';
     }
 
@@ -350,9 +364,22 @@ export class ChessEngineService {
     defenderName: string,
     blockReason: string,
   ): void {
+    const wasInCheck = this.chess.inCheck();
+    const movingColor = this.chess.turn();
+
     this.chessState.setMessage(`¡${defenderName} es inmune a ${attackerName}! ${blockReason}`);
     this.chessState.setInvalidCaptureSquare(to);
     this.clearSelection();
+
+    if (wasInCheck) {
+      this.applyCheckmateFromImmunity(movingColor);
+      this.syncState();
+      window.setTimeout(() => {
+        this.chessState.setInvalidCaptureSquare(null);
+      }, 900);
+      return;
+    }
+
     this.passTurn();
     this.syncState();
     this.scheduleAiTurnIfNeeded();
@@ -395,6 +422,10 @@ export class ChessEngineService {
     this.chessState.setTurn(this.chess.turn());
     this.chessState.setLastMove(lastMove ?? null);
 
+    if (this.chessState.forcedResult()) {
+      return;
+    }
+
     if (this.chess.isCheckmate()) {
       this.gameState.setStatus('checkmate');
       this.recordStatsIfNeeded();
@@ -413,7 +444,101 @@ export class ChessEngineService {
       return;
     }
 
-    this.gameState.setStatus('playing');
+    this.evaluateEndgameConditions();
+
+    if (!this.isGameOver()) {
+      this.gameState.setStatus('playing');
+    }
+  }
+
+  private evaluateEndgameConditions(): void {
+    if (this.isGameOver()) {
+      return;
+    }
+
+    if (this.shouldEndByInsufficientMaterial()) {
+      this.applyDraw('Tablas por material insuficiente.');
+    }
+  }
+
+  private shouldEndByInsufficientMaterial(): boolean {
+    if (this.chess.isInsufficientMaterial()) {
+      return true;
+    }
+
+    const material = this.countMaterial();
+
+    return (
+      material.pawns === 0 &&
+      material.knights === 0 &&
+      material.rooks === 0 &&
+      material.queens === 0 &&
+      material.bishops === 2
+    );
+  }
+
+  private countMaterial(): {
+    pawns: number;
+    knights: number;
+    bishops: number;
+    rooks: number;
+    queens: number;
+  } {
+    const counts = { pawns: 0, knights: 0, bishops: 0, rooks: 0, queens: 0 };
+
+    for (const row of this.chess.board()) {
+      for (const piece of row) {
+        if (!piece) {
+          continue;
+        }
+
+        switch (piece.type) {
+          case 'p':
+            counts.pawns++;
+            break;
+          case 'n':
+            counts.knights++;
+            break;
+          case 'b':
+            counts.bishops++;
+            break;
+          case 'r':
+            counts.rooks++;
+            break;
+          case 'q':
+            counts.queens++;
+            break;
+        }
+      }
+    }
+
+    return counts;
+  }
+
+  private applyCheckmateFromImmunity(losingColor: Color): void {
+    const winner: BoardColor = losingColor === 'w' ? 'b' : 'w';
+    const winnerLabel = winner === 'w' ? 'Blancas' : 'Negras';
+
+    this.chessState.setForcedResult({
+      type: 'checkmate',
+      winner,
+      message: `Jaque mate. Ganan ${winnerLabel}.`,
+    });
+    this.gameState.setStatus('checkmate');
+    this.recordStatsIfNeeded();
+  }
+
+  private applyDraw(message: string): void {
+    if (this.chessState.forcedResult()) {
+      return;
+    }
+
+    this.chessState.setForcedResult({
+      type: 'draw',
+      message,
+    });
+    this.gameState.setStatus('draw');
+    this.recordStatsIfNeeded();
   }
 
   private recordStatsIfNeeded(): void {
@@ -423,9 +548,15 @@ export class ChessEngineService {
 
     this.gameState.setStatsRecorded(true);
 
+    const forced = this.chessState.forcedResult();
     let result: GameResult;
 
-    if (this.chess.isCheckmate()) {
+    if (forced?.type === 'checkmate') {
+      const playerLost = forced.winner !== this.gameState.playerColor();
+      result = playerLost ? 'loss' : 'win';
+    } else if (forced?.type === 'draw' || this.chess.isDraw() || this.chess.isStalemate()) {
+      result = 'draw';
+    } else if (this.chess.isCheckmate()) {
       const playerLost = this.chess.turn() === this.gameState.playerColor();
       result = playerLost ? 'loss' : 'win';
     } else {
@@ -436,7 +567,7 @@ export class ChessEngineService {
   }
 
   private scheduleAiTurnIfNeeded(): void {
-    if (this.chess.isGameOver() || !this.gameState.vsAi() || this.isPlayerTurn()) {
+    if (this.isGameOver() || !this.gameState.vsAi() || this.isPlayerTurn()) {
       return;
     }
 
@@ -451,7 +582,7 @@ export class ChessEngineService {
   }
 
   private playAiMove(): void {
-    if (this.chess.isGameOver() || this.isPlayerTurn()) {
+    if (this.isGameOver() || this.isPlayerTurn()) {
       return;
     }
 

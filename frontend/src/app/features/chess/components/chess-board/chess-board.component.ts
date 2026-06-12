@@ -19,6 +19,7 @@ export class ChessBoardComponent {
     this.chessState.fen();
     this.chessState.turn();
     this.chessState.pendingPromotion();
+    this.chessState.forcedResult();
     return this.engine.canInteract();
   });
 

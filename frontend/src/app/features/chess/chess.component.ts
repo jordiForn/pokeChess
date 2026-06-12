@@ -38,6 +38,7 @@ export class ChessComponent implements OnInit {
 
   protected readonly isGameOver = () => {
     this.chessState.fen();
+    this.chessState.forcedResult();
     return this.engine.isGameOver();
   };
 
@@ -56,6 +57,7 @@ export class ChessComponent implements OnInit {
 
     effect(() => {
       this.chessState.fen();
+      this.chessState.forcedResult();
       const status = this.engine.getStatusMessage();
       const gameOver = this.engine.isGameOver();
 

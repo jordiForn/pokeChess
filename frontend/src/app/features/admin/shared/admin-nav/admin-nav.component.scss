@@ -6,6 +6,9 @@
   border: 1px solid var(--border);
   border-radius: 0.75rem;
   background: var(--surface);
+  width: 100%;
+  max-width: 64rem;
+  margin-inline: auto;
 
   a {
     flex: 1;
