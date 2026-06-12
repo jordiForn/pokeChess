@@ -4,7 +4,7 @@
       <h1>Pokemon Chess</h1>
       <p>
         @if (vsAi()) {
-          Modo vs IA · Juegas con blancas · Turno: {{ turnLabel() }}
+          Modo vs IA · Juegas con {{ playerColorLabel() }} · Turno: {{ turnLabel() }}
         } @else {
           Modo local · 2 jugadores · Turno: {{ turnLabel() }}
         }

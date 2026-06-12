@@ -45,7 +45,8 @@ export class ChessEngineService {
     this.gameState.setAiThinking(false);
     this.chess.reset();
     this.chessState.reset();
-    this.gameState.startGame(mode, 'w');
+    const playerColor = mode === 'ai' ? this.randomPlayerColor() : 'w';
+    this.gameState.startGame(mode, playerColor);
     this.inventory.initialize(this.chess, this.chessState.piecesConfig());
     this.syncState();
     this.scheduleAiTurnIfNeeded();
@@ -601,5 +602,9 @@ export class ChessEngineService {
       window.clearTimeout(this.aiMoveTimeout);
       this.aiMoveTimeout = null;
     }
+  }
+
+  private randomPlayerColor(): BoardColor {
+    return Math.random() < 0.5 ? 'w' : 'b';
   }
 }

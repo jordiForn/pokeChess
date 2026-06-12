@@ -1,9 +1,18 @@
+:host {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
 .dashboard {
+  width: 100%;
   max-width: 72rem;
+  margin-inline: auto;
 }
 
 .dashboard-header {
   margin-bottom: 1.25rem;
+  text-align: center;
 
   h1 {
     margin: 0 0 0.35rem;
@@ -20,6 +29,8 @@
 .stats-row {
   padding: 1rem 1.25rem;
   margin-bottom: 1.25rem;
+  display: flex;
+  justify-content: center;
 }
 
 .dashboard-grid {

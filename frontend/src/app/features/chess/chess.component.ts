@@ -36,6 +36,11 @@ export class ChessComponent implements OnInit {
     return this.engine.getTurnLabel();
   };
 
+  protected readonly playerColorLabel = () => {
+    this.gameState.playerColor();
+    return this.gameState.playerColor() === 'w' ? 'blancas' : 'negras';
+  };
+
   protected readonly isGameOver = () => {
     this.chessState.fen();
     this.chessState.forcedResult();
