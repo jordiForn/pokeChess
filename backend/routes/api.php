@@ -1,8 +1,10 @@
 <?php
 
+use App\Http\Controllers\Api\Admin\ObservabilityController as AdminObservabilityController;
 use App\Http\Controllers\Api\Admin\PieceController as AdminPieceController;
 use App\Http\Controllers\Api\Admin\UserController as AdminUserController;
 use App\Http\Controllers\Api\AuthController;
+use App\Http\Controllers\Api\ObservabilityController;
 use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\PieceController;
 use App\Http\Controllers\Api\ProfileController;
@@ -16,6 +18,8 @@ Route::prefix('v1')->group(function (): void {
     Route::post('/login', [AuthController::class, 'login']);
     Route::post('/forgot-password', [PasswordResetController::class, 'sendResetLink']);
     Route::post('/reset-password', [PasswordResetController::class, 'reset']);
+    Route::post('/observability/events', [ObservabilityController::class, 'store'])
+        ->middleware('throttle:120,1');
 
     Route::middleware('auth:sanctum')->group(function (): void {
         Route::post('/logout', [AuthController::class, 'logout']);
@@ -27,6 +31,7 @@ Route::prefix('v1')->group(function (): void {
     });
 
     Route::middleware(['auth:sanctum', 'is_admin'])->prefix('admin')->group(function (): void {
+        Route::get('/observability/summary', [AdminObservabilityController::class, 'summary']);
         Route::apiResource('users', AdminUserController::class);
         Route::apiResource('pieces', AdminPieceController::class);
     });

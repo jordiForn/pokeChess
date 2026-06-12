@@ -35,4 +35,9 @@ return [
         ],
     ],
 
+    'vercel' => [
+        'analytics_url' => env('VERCEL_ANALYTICS_DASHBOARD_URL'),
+        'speed_insights_url' => env('VERCEL_SPEED_INSIGHTS_DASHBOARD_URL'),
+    ],
+
 ];

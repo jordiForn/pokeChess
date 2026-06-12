@@ -1,0 +1,92 @@
+<section class="observability-panel card-surface">
+  <header class="panel-header">
+    <div>
+      <h2><app-icon name="chart-line" /> Observabilidad Vercel</h2>
+      <p>Métricas espejadas desde Analytics y Speed Insights (últimos 7 días).</p>
+    </div>
+
+    @if (summary(); as data) {
+      <div class="dashboard-links">
+        @if (data.vercel_dashboard.analytics_url) {
+          <a class="dashboard-link" [href]="data.vercel_dashboard.analytics_url" target="_blank" rel="noopener">
+            <app-icon name="chart-column" /> Analytics en Vercel
+          </a>
+        }
+        @if (data.vercel_dashboard.speed_insights_url) {
+          <a class="dashboard-link" [href]="data.vercel_dashboard.speed_insights_url" target="_blank" rel="noopener">
+            <app-icon name="gauge-high" /> Speed Insights en Vercel
+          </a>
+        }
+      </div>
+    }
+  </header>
+
+  @if (loading()) {
+    <p class="muted">Cargando métricas...</p>
+  } @else if (error(); as message) {
+    <p class="muted">{{ message }}</p>
+  } @else if (summary(); as data) {
+    <div class="metrics-grid">
+      <article class="metric-card">
+        <span class="metric-label">Page views</span>
+        <strong class="metric-value">{{ data.page_views | number }}</strong>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">LCP p75</span>
+        <strong class="metric-value">{{ formatVital('LCP', data) }}</strong>
+        <small>{{ vitalSamples('LCP', data) }} muestras</small>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">INP p75</span>
+        <strong class="metric-value">{{ formatVital('INP', data) }}</strong>
+        <small>{{ vitalSamples('INP', data) }} muestras</small>
+      </article>
+      <article class="metric-card">
+        <span class="metric-label">CLS p75</span>
+        <strong class="metric-value">{{ formatVital('CLS', data) }}</strong>
+        <small>{{ vitalSamples('CLS', data) }} muestras</small>
+      </article>
+    </div>
+
+    <div class="details-grid">
+      <section>
+        <h3>Rutas más visitadas</h3>
+        @if (data.top_paths.length === 0) {
+          <p class="muted">Todavía no hay page views registrados.</p>
+        } @else {
+          <ul class="metric-list">
+            @for (item of data.top_paths; track item.path) {
+              <li>
+                <span>{{ item.path }}</span>
+                <strong>{{ item.count | number }}</strong>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+
+      <section>
+        <h3>Eventos personalizados</h3>
+        @if (data.custom_events.length === 0) {
+          <p class="muted">Sin eventos de juego u otros eventos todavía.</p>
+        } @else {
+          <ul class="metric-list">
+            @for (item of data.custom_events; track item.name) {
+              <li>
+                <span>{{ item.name }}</span>
+                <strong>{{ item.count | number }}</strong>
+              </li>
+            }
+          </ul>
+        }
+      </section>
+    </div>
+
+    @if (!data.vercel_dashboard.analytics_url && !data.vercel_dashboard.speed_insights_url) {
+      <p class="hint muted">
+        Configura <code>VERCEL_ANALYTICS_DASHBOARD_URL</code> y
+        <code>VERCEL_SPEED_INSIGHTS_DASHBOARD_URL</code> en Railway para enlaces directos al panel de Vercel.
+      </p>
+    }
+  }
+</section>
