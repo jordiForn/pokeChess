@@ -1,24 +1,39 @@
-<header class="navbar">
-  <a class="brand" routerLink="/home">Pokemon Chess</a>
+<aside class="sidebar">
+  <a class="brand" routerLink="/home">
+    <span class="brand-icon">♟</span>
+    <span class="brand-text">PokeChess</span>
+  </a>
 
-  <nav class="links">
-    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">Home</a>
-    <a routerLink="/chess" routerLinkActive="active">Ajedrez</a>
-    <a routerLink="/profile" routerLinkActive="active">Perfil</a>
+  <nav class="nav-links">
+    <a routerLink="/home" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }">
+      <span class="nav-icon">⌂</span>
+      <span>Inicio</span>
+    </a>
+    <a routerLink="/chess" routerLinkActive="active">
+      <span class="nav-icon">♞</span>
+      <span>Jugar</span>
+    </a>
+    <a routerLink="/profile" routerLinkActive="active">
+      <span class="nav-icon">◉</span>
+      <span>Perfil</span>
+    </a>
     @if (isAdmin()) {
-      <a routerLink="/admin" routerLinkActive="active">Admin</a>
+      <a routerLink="/admin" routerLinkActive="active">
+        <span class="nav-icon">⚙</span>
+        <span>Admin</span>
+      </a>
     }
   </nav>
 
-  <div class="user-area">
-    <div class="user-profile">
+  <div class="sidebar-footer">
+    <a class="user-profile" routerLink="/profile">
       @if (user()?.avatar; as avatar) {
         <img class="user-avatar" [src]="avatar" [alt]="user()?.name ?? 'Avatar'" />
       } @else {
         <span class="user-avatar-fallback">{{ initials() }}</span>
       }
       <span class="user-name">{{ user()?.name }}</span>
-    </div>
-    <button type="button" (click)="logout()">Salir</button>
+    </a>
+    <button type="button" class="logout-btn" (click)="logout()">Salir</button>
   </div>
-</header>
+</aside>

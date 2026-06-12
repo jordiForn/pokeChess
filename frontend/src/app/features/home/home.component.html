@@ -1,35 +1,54 @@
-<section class="page">
-  <header class="page-header">
-    <h1>Bienvenido, {{ user()?.name }}</h1>
-    <p>Entrena estrategia con piezas Pokémon en un tablero de ajedrez clásico.</p>
+<section class="dashboard">
+  <header class="dashboard-header">
+    <div>
+      <h1>{{ user()?.name }}</h1>
+      <p>Entrena estrategia con piezas Pokémon en un tablero clásico.</p>
+    </div>
   </header>
 
-  <section class="stats-section">
-    <h2>Tus estadísticas</h2>
+  <section class="stats-row card-surface">
     <app-stats-summary [stats]="stats()" />
   </section>
 
-  <div class="cards">
-    <a class="card" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
-      <h2>Jugar vs IA</h2>
-      <p>Partida singleplayer con reglas Pokémon y turnos automáticos de la IA.</p>
-    </a>
-
-    <a class="card" routerLink="/chess" [queryParams]="{ mode: 'local' }">
-      <h2>Modo local</h2>
-      <p>2 jugadores en el mismo dispositivo, sin IA.</p>
-    </a>
-
-    <a class="card" routerLink="/profile">
-      <h2>Perfil</h2>
-      <p>Actualiza tu nombre, avatar y revisa stats.</p>
-    </a>
-
-    @if (isAdmin()) {
-      <a class="card card-admin" routerLink="/admin">
-        <h2>Administración</h2>
-        <p>Gestiona usuarios y piezas globales.</p>
+  <div class="dashboard-grid">
+    <section class="quick-actions card-surface">
+      <h2>Jugar ahora</h2>
+      <a class="action-btn action-primary" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
+        <span class="action-icon">🤖</span>
+        <span class="action-copy">
+          <strong>Partida vs IA</strong>
+          <small>Reglas Pokémon · turnos automáticos</small>
+        </span>
       </a>
-    }
+      <a class="action-btn" routerLink="/chess" [queryParams]="{ mode: 'local' }">
+        <span class="action-icon">👥</span>
+        <span class="action-copy">
+          <strong>Modo local</strong>
+          <small>2 jugadores en el mismo dispositivo</small>
+        </span>
+      </a>
+    </section>
+
+    <section class="feature-cards">
+      <a class="feature-card card-surface" routerLink="/profile">
+        <div class="feature-icon">◉</div>
+        <h3>Perfil</h3>
+        <p>Actualiza tu nombre, avatar y revisa estadísticas.</p>
+      </a>
+
+      <a class="feature-card card-surface" routerLink="/chess" [queryParams]="{ mode: 'ai' }">
+        <div class="feature-icon">♞</div>
+        <h3>Tablero</h3>
+        <p>Continúa tu última partida o empieza una nueva.</p>
+      </a>
+
+      @if (isAdmin()) {
+        <a class="feature-card card-surface feature-admin" routerLink="/admin">
+          <div class="feature-icon">⚙</div>
+          <h3>Administración</h3>
+          <p>Gestiona usuarios y piezas globales del juego.</p>
+        </a>
+      }
+    </section>
   </div>
 </section>

@@ -5,14 +5,30 @@
 }
 
 :root {
-  --bg: #f4f6fb;
-  --surface: #ffffff;
-  --text: #1f2937;
-  --muted: #6b7280;
-  --border: #d1d5db;
-  --primary: #2563eb;
-  --danger: #b00020;
-  --success: #047857;
+  --bg: #1b263b;
+  --surface: #2c3e50;
+  --surface-tertiary: #34495e;
+  --border: #4a6278;
+  --text: #f8f9fa;
+  --muted: #c7d2da;
+  --text-disabled: #8a99a8;
+  --primary: #ffcb05;
+  --primary-hover: #ffd93d;
+  --primary-active: #e6b800;
+  --secondary: #3b5ba7;
+  --secondary-hover: #4c70c0;
+  --accent: #e3350d;
+  --success: #4caf50;
+  --info: #4da6ff;
+  --warning: #ffcb05;
+  --danger: #e3350d;
+  --square-light: #f0ead6;
+  --square-dark: #7a5c3e;
+  --square-selected: #ffcb05;
+  --square-last-move: #ffe38a;
+  --square-legal: #4caf50;
+  --square-capture: #e3350d;
+  --sidebar-width: 15.5rem;
 }
 
 html,
@@ -35,28 +51,86 @@ a {
 }
 
 input,
-button {
+select,
+textarea {
   font: inherit;
   border: 1px solid var(--border);
-  border-radius: 0.375rem;
-  background: var(--surface);
+  border-radius: 0.5rem;
+  background: var(--surface-tertiary);
   color: var(--text);
+  padding: 0.625rem 0.75rem;
 }
 
 button {
-  padding: 0.5rem 0.875rem;
+  font: inherit;
+  border: 1px solid transparent;
+  border-radius: 0.5rem;
+  cursor: pointer;
+  padding: 0.625rem 1rem;
+  font-weight: 600;
   background: var(--primary);
-  color: #fff;
-  border-color: var(--primary);
+  color: #1b263b;
+  transition:
+    background-color 0.15s ease,
+    border-color 0.15s ease,
+    transform 0.15s ease;
+}
+
+button:hover:not(:disabled) {
+  background: var(--primary-hover);
+}
+
+button:active:not(:disabled) {
+  background: var(--primary-active);
 }
 
 button:disabled {
-  opacity: 0.6;
+  opacity: 0.55;
   cursor: not-allowed;
 }
 
+button.secondary {
+  background: var(--secondary);
+  color: var(--text);
+}
+
+button.secondary:hover:not(:disabled) {
+  background: var(--secondary-hover);
+}
+
+button.danger {
+  background: var(--danger);
+  color: var(--text);
+}
+
 input:focus,
+select:focus,
+textarea:focus,
 button:focus-visible {
-  outline: 2px solid color-mix(in srgb, var(--primary) 35%, white);
+  outline: 2px solid color-mix(in srgb, var(--primary) 55%, transparent);
   outline-offset: 1px;
+}
+
+.page-header {
+  margin-bottom: 1.5rem;
+
+  h1 {
+    margin: 0 0 0.35rem;
+    font-size: 1.75rem;
+  }
+
+  p {
+    margin: 0;
+    color: var(--muted);
+  }
+}
+
+.muted {
+  color: var(--muted);
+}
+
+.card-surface {
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
+  background: var(--surface);
 }

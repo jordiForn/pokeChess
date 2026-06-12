@@ -1,7 +1,13 @@
+:host {
+  display: block;
+  max-width: 64rem;
+}
+
 .page-header {
   display: flex;
   align-items: center;
   justify-content: space-between;
+  gap: 1rem;
   margin-bottom: 1rem;
 
   h1 {
@@ -15,7 +21,7 @@
   margin-bottom: 1.5rem;
   padding: 1.25rem;
   border: 1px solid var(--border);
-  border-radius: 0.75rem;
+  border-radius: 0.875rem;
   background: var(--surface);
 
   h2 {
@@ -32,6 +38,8 @@ label {
 
 .table-wrap {
   overflow-x: auto;
+  border: 1px solid var(--border);
+  border-radius: 0.875rem;
 }
 
 table {
@@ -47,28 +55,26 @@ td {
   text-align: left;
 }
 
+th {
+  background: var(--surface-tertiary);
+  color: var(--muted);
+  font-size: 0.8125rem;
+  text-transform: uppercase;
+  letter-spacing: 0.03em;
+}
+
 .actions {
   display: flex;
   gap: 0.5rem;
+  flex-wrap: wrap;
 }
 
 .danger {
   background: var(--danger);
   border-color: var(--danger);
-}
-
-.error {
-  color: var(--danger);
-}
-
-.success {
-  color: var(--success);
+  color: var(--text);
 }
 
 .muted {
   color: var(--muted);
-}
-
-select {
-  padding: 0.625rem;
 }

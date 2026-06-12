@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: rgb(15 23 42 / 45%);
+  background: rgb(27 38 59 / 72%);
   padding: 1rem;
 }
 
@@ -43,7 +43,7 @@
   padding: 0.75rem;
   border: 1px solid var(--border);
   border-radius: 0.625rem;
-  background: color-mix(in srgb, var(--primary) 6%, white);
+  background: color-mix(in srgb, var(--primary) 10%, var(--surface-tertiary));
   cursor: pointer;
   transition:
     border-color 0.15s ease,

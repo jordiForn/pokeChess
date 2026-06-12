@@ -10,39 +10,50 @@ type HttpErrorPayload = {
 
 @Injectable({ providedIn: 'root' })
 export class AlertService {
+  private readonly swalDefaults: SweetAlertOptions = {
+    confirmButtonText: 'Aceptar',
+    cancelButtonText: 'Cancelar',
+    background: '#2c3e50',
+    color: '#f8f9fa',
+    confirmButtonColor: '#ffcb05',
+    cancelButtonColor: '#4a6278',
+  };
+
   success(title: string, text?: string): Promise<unknown> {
     return Swal.fire({
+      ...this.swalDefaults,
       icon: 'success',
       title,
       text,
-      confirmButtonText: 'Aceptar',
     });
   }
 
   error(title: string, text?: string): Promise<unknown> {
     return Swal.fire({
+      ...this.swalDefaults,
       icon: 'error',
       title,
       text,
-      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#e3350d',
     });
   }
 
   warning(title: string, text?: string): Promise<unknown> {
     return Swal.fire({
+      ...this.swalDefaults,
       icon: 'warning',
       title,
       text,
-      confirmButtonText: 'Aceptar',
     });
   }
 
   info(title: string, text?: string): Promise<unknown> {
     return Swal.fire({
+      ...this.swalDefaults,
       icon: 'info',
       title,
       text,
-      confirmButtonText: 'Aceptar',
+      confirmButtonColor: '#3b5ba7',
     });
   }
 
@@ -55,12 +66,15 @@ export class AlertService {
       showConfirmButton: false,
       timer: 3500,
       timerProgressBar: true,
+      background: '#34495e',
+      color: '#f8f9fa',
       ...options,
     });
   }
 
   async confirm(title: string, text?: string): Promise<boolean> {
     const result = await Swal.fire({
+      ...this.swalDefaults,
       icon: 'warning',
       title,
       text,
