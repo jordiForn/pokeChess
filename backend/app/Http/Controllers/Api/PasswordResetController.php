@@ -14,7 +14,15 @@ class PasswordResetController extends ApiController
 {
     public function sendResetLink(ForgotPasswordRequest $request): JsonResponse
     {
-        Password::sendResetLink($request->only('email'));
+        try {
+            Password::sendResetLink($request->only('email'));
+        } catch (\Throwable $exception) {
+            report($exception);
+
+            return response()->json([
+                'message' => 'No se pudo enviar el correo. Comprueba la configuración SMTP (puerto 587 en Railway) e inténtalo de nuevo.',
+            ], 503);
+        }
 
         return response()->json([
             'message' => 'Si el email existe, recibirás un enlace de recuperación en breve.',

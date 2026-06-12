@@ -126,6 +126,7 @@ export class AlertService {
       'The selected pokemon type is invalid.': 'El tipo Pokémon no es válido.',
       'The sprite url field is required.': 'No se pudo obtener el sprite del Pokémon.',
       'The sprite url field must be a valid URL.': 'La URL del sprite no es válida.',
+      'Server Error': 'Error interno del servidor.',
       'Unauthenticated.': 'Debes iniciar sesión.',
       'Unauthorized.': 'No tienes permisos para esta acción.',
       'passwords.token': 'El enlace de recuperación no es válido o ha expirado.',
