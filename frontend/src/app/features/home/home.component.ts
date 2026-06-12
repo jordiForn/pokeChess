@@ -5,10 +5,11 @@ import { StatsService } from '../../core/services/stats.service';
 import { UserStateService } from '../../core/services/user-state.service';
 import { StatsSummaryComponent } from '../../shared/components/stats-summary/stats-summary.component';
 import { IconComponent } from '../../shared/components/icon/icon.component';
+import { AppLogoComponent } from '../../shared/components/logo/app-logo.component';
 
 @Component({
   selector: 'app-home',
-  imports: [RouterLink, StatsSummaryComponent, IconComponent],
+  imports: [RouterLink, StatsSummaryComponent, IconComponent, AppLogoComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss',
 })

@@ -16,4 +16,3 @@ const content = `export const environment = {
 `;
 
 fs.writeFileSync(target, content, 'utf8');
-console.log('Production API URL:', apiUrl);

@@ -34,7 +34,7 @@ class PasswordResetController extends ApiController
             report($exception);
 
             return response()->json([
-                'message' => 'No se pudo enviar el correo. Verifica MAILTRAP_API_TOKEN y MAILTRAP_INBOX_ID en Railway.',
+                'message' => 'No se pudo enviar el correo en este momento. Inténtalo más tarde.',
             ], 503);
         }
 

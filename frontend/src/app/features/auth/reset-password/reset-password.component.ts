@@ -4,11 +4,12 @@ import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../core/services/alert.service';
 
+import { AuthLayoutComponent } from '../shared/auth-layout/auth-layout.component';
+
 @Component({
   selector: 'app-reset-password',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, AuthLayoutComponent],
   templateUrl: './reset-password.component.html',
-  styleUrl: './reset-password.component.scss',
 })
 export class ResetPasswordComponent implements OnInit {
   private readonly fb = inject(NonNullableFormBuilder);

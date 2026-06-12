@@ -3,6 +3,8 @@
 namespace App\Services;
 
 use App\Models\User;
+use App\Support\EmailBrandAssets;
+use App\Support\PasswordResetUrl;
 use Illuminate\Support\Facades\Password;
 
 class PasswordResetMailService
@@ -14,17 +16,18 @@ class PasswordResetMailService
     public function sendResetLink(User $user): void
     {
         $token = Password::createToken($user);
-        $resetUrl = $this->buildResetUrl($user, $token);
+        $resetUrl = PasswordResetUrl::build($user->getEmailForPasswordReset(), $token);
 
         if ($this->usesMailtrapApi()) {
             $this->mailtrapApi->sendSandboxEmail(
                 toEmail: $user->email,
-                subject: 'Recuperar contraseña - '.config('app.name'),
+                subject: 'Recuperar contraseña · '.config('app.name'),
                 html: view('emails.reset-password', [
                     'user' => $user,
                     'resetUrl' => $resetUrl,
+                    'logoDataUri' => EmailBrandAssets::logoDataUri(),
                 ])->render(),
-                text: "Hola {$user->name}, restablece tu contraseña aquí: {$resetUrl}",
+                text: $this->buildPlainText($user, $resetUrl),
             );
 
             return;
@@ -39,10 +42,13 @@ class PasswordResetMailService
             && filled(config('services.mailtrap.inbox_id'));
     }
 
-    private function buildResetUrl(User $user, string $token): string
+    private function buildPlainText(User $user, string $resetUrl): string
     {
-        return rtrim((string) config('app.frontend_url'), '/')
-            .'/reset-password?token='.urlencode($token)
-            .'&email='.urlencode($user->getEmailForPasswordReset());
+        return implode("\n\n", [
+            "Hola {$user->name},",
+            'Recibimos una solicitud para restablecer tu contraseña en '.config('app.name').'.',
+            "Restablece tu contraseña aquí: {$resetUrl}",
+            'Si no solicitaste este cambio, ignora este correo.',
+        ]);
     }
 }

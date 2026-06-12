@@ -153,12 +153,17 @@
   justify-content: center;
   margin-bottom: 0.875rem;
   border-radius: 0.625rem;
+  background: transparent;
+}
+
+.feature-icon:has(app-icon) {
   background: var(--surface-tertiary);
   color: var(--primary);
   font-size: 1.125rem;
 }
 
 .feature-admin .feature-icon {
+  background: var(--surface-tertiary);
   color: var(--info);
 }
 

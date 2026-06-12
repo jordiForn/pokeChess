@@ -4,11 +4,12 @@ import { Router, RouterLink } from '@angular/router';
 import { AuthService } from '../../../core/services/auth.service';
 import { AlertService } from '../../../core/services/alert.service';
 
+import { AuthLayoutComponent } from '../shared/auth-layout/auth-layout.component';
+
 @Component({
   selector: 'app-register',
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, AuthLayoutComponent],
   templateUrl: './register.component.html',
-  styleUrl: './register.component.scss',
 })
 export class RegisterComponent {
   private readonly fb = inject(NonNullableFormBuilder);
