@@ -40,4 +40,9 @@ return [
         'speed_insights_url' => env('VERCEL_SPEED_INSIGHTS_DASHBOARD_URL'),
     ],
 
+    'mailtrap' => [
+        'api_token' => env('MAILTRAP_API_TOKEN'),
+        'inbox_id' => env('MAILTRAP_INBOX_ID'),
+    ],
+
 ];

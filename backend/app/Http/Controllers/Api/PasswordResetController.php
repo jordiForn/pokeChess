@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Api;
 use App\Http\Requests\Auth\ForgotPasswordRequest;
 use App\Http\Requests\Auth\ResetPasswordRequest;
 use App\Models\User;
+use App\Services\PasswordResetMailService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Password;
@@ -12,15 +13,28 @@ use Illuminate\Validation\ValidationException;
 
 class PasswordResetController extends ApiController
 {
+    public function __construct(
+        private readonly PasswordResetMailService $passwordResetMail,
+    ) {}
+
     public function sendResetLink(ForgotPasswordRequest $request): JsonResponse
     {
+        $email = $request->string('email')->toString();
+        $user = User::query()->where('email', $email)->first();
+
+        if ($user === null) {
+            return response()->json([
+                'message' => 'Si el email existe, recibirás un enlace de recuperación en breve.',
+            ]);
+        }
+
         try {
-            Password::sendResetLink($request->only('email'));
+            $this->passwordResetMail->sendResetLink($user);
         } catch (\Throwable $exception) {
             report($exception);
 
             return response()->json([
-                'message' => 'No se pudo enviar el correo. Comprueba la configuración SMTP (puerto 587 en Railway) e inténtalo de nuevo.',
+                'message' => 'No se pudo enviar el correo. Verifica MAILTRAP_API_TOKEN y MAILTRAP_INBOX_ID en Railway.',
             ], 503);
         }
 
