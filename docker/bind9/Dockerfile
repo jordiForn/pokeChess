@@ -1,10 +1,10 @@
+# Base oficial ISC: Alpine Linux (bind9 ya incluido en la imagen)
 FROM internetsystemsconsortium/bind9:9.18
 
 USER root
 
-RUN apt-get update \
-    && apt-get install -y --no-install-recommends dnsutils \
-    && rm -rf /var/lib/apt/lists/*
+# bind-tools = dig/nslookup (equivalente Alpine de dnsutils en Debian)
+RUN apk add --no-cache bind-tools
 
 COPY named.conf /etc/bind/named.conf
 COPY named.conf.local /etc/bind/named.conf.local
