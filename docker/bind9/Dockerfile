@@ -9,5 +9,12 @@ RUN apk add --no-cache bind-tools
 COPY named.conf /etc/bind/named.conf
 COPY named.conf.local /etc/bind/named.conf.local
 COPY named.conf.options /etc/bind/named.conf.options
+COPY docker-entrypoint.sh /docker-entrypoint.sh
 
-RUN mkdir -p /etc/bind/zones && chown -R bind:bind /etc/bind
+RUN chmod +x /docker-entrypoint.sh \
+    && mkdir -p /etc/bind/zones /var/log/bind \
+    && chown -R bind:bind /etc/bind /var/log/bind
+
+EXPOSE 53/tcp 53/udp
+
+ENTRYPOINT ["/docker-entrypoint.sh"]
