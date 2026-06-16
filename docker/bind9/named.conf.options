@@ -1,0 +1,16 @@
+options {
+    directory "/var/cache/bind";
+    listen-on port 53 { any; };
+    listen-on-v6 port 53 { none; };
+    allow-query { any; };
+    recursion no;
+    dnssec-validation no;
+};
+
+logging {
+    channel default_log {
+        stderr;
+        severity info;
+    };
+    category default { default_log; };
+};

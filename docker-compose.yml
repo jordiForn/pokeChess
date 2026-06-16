@@ -1,0 +1,134 @@
+name: pokechess
+
+services:
+  dns:
+    build:
+      context: ./docker/bind9
+      dockerfile: Dockerfile
+    container_name: pokechess-dns
+    restart: unless-stopped
+    ports:
+      - "53:53/udp"
+      - "53:53/tcp"
+    volumes:
+      - ./docker/bind9/zones:/etc/bind/zones:ro
+    networks:
+      pokechess_net:
+        ipv4_address: 10.1.0.2
+    healthcheck:
+      test: ["CMD-SHELL", "dig @127.0.0.1 app.local +short | grep -q '^10\\.1\\.0\\.3$'"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
+
+  mariadb:
+    image: mariadb:11.4
+    container_name: pokechess-mariadb
+    restart: unless-stopped
+    environment:
+      MARIADB_ROOT_PASSWORD: ${MARIADB_ROOT_PASSWORD:-root_secret}
+      MARIADB_DATABASE: ${MARIADB_DATABASE:-pokechess}
+      MARIADB_USER: ${MARIADB_USER:-pokechess}
+      MARIADB_PASSWORD: ${MARIADB_PASSWORD:-pokechess_secret}
+    volumes:
+      - mariadb_data:/var/lib/mysql
+    networks:
+      pokechess_net:
+        ipv4_address: 10.1.0.5
+    healthcheck:
+      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+      start_period: 40s
+
+  php-fpm:
+    build:
+      context: .
+      dockerfile: docker/php-fpm/Dockerfile
+    container_name: pokechess-php-fpm
+    restart: unless-stopped
+    env_file:
+      - .env.docker
+    volumes:
+      - ./backend:/var/www/backend
+      - php_storage:/var/www/backend/storage
+      - php_cache:/var/www/backend/bootstrap/cache
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      pokechess_net:
+        ipv4_address: 10.1.0.4
+    healthcheck:
+      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
+      interval: 15s
+      timeout: 5s
+      retries: 5
+      start_period: 60s
+
+  phpmyadmin:
+    image: phpmyadmin:5-apache
+    container_name: pokechess-phpmyadmin
+    restart: unless-stopped
+    environment:
+      PMA_HOST: mariadb
+      PMA_PORT: 3306
+      PMA_USER: ${MARIADB_USER:-pokechess}
+      PMA_PASSWORD: ${MARIADB_PASSWORD:-pokechess_secret}
+      PMA_ABSOLUTE_URI: http://db.app.local/
+      UPLOAD_LIMIT: 64M
+    depends_on:
+      mariadb:
+        condition: service_healthy
+    networks:
+      pokechess_net:
+        ipv4_address: 10.1.0.6
+    healthcheck:
+      test: ["CMD-SHELL", "curl -sf http://127.0.0.1/ || exit 1"]
+      interval: 20s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+
+  nginx:
+    build:
+      context: .
+      dockerfile: docker/nginx/Dockerfile
+      args:
+        API_URL: ${API_URL:-http://api.app.local/api}
+    container_name: pokechess-nginx
+    restart: unless-stopped
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/public:/var/www/backend/public:ro
+    depends_on:
+      php-fpm:
+        condition: service_healthy
+      phpmyadmin:
+        condition: service_healthy
+    networks:
+      pokechess_net:
+        ipv4_address: 10.1.0.3
+    healthcheck:
+      test: ["CMD-SHELL", "wget -qO- --header='Host: api.app.local' http://127.0.0.1/up >/dev/null && wget -qO- --header='Host: app.local' http://127.0.0.1/ | grep -q 'app-root'"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+
+networks:
+  pokechess_net:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 10.1.0.0/24
+          gateway: 10.1.0.1
+
+volumes:
+  mariadb_data:
+  php_storage:
+  php_cache:

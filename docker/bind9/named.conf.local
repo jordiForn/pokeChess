@@ -1,0 +1,4 @@
+zone "app.local" {
+    type master;
+    file "/etc/bind/zones/db.app.local";
+};

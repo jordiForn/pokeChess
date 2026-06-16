@@ -1,0 +1,25 @@
+# Docker
+.env.docker
+.env
+backend/.env
+
+# Dependencies
+node_modules
+backend/vendor
+
+# Build artifacts
+frontend/dist
+backend/storage/logs/*
+backend/storage/framework/cache/*
+backend/storage/framework/sessions/*
+backend/storage/framework/views/*
+
+# Git / IDE
+.git
+.gitignore
+.idea
+.vscode
+
+# Docs
+*.md
+!docker/**/*.md
