@@ -27,9 +27,13 @@ if [ ! -f vendor/autoload.php ]; then
   composer install --no-interaction --prefer-dist --optimize-autoloader
 fi
 
-if [ -z "$APP_KEY" ] || [ "$APP_KEY" = "base64:" ]; then
-  echo "[php-fpm] Generating APP_KEY..."
-  php artisan key:generate --force --no-interaction
+# APP_KEY= vacío en env_file de Compose anula el valor de backend/.env
+if [ -z "${APP_KEY:-}" ] || [ "$APP_KEY" = "base64:" ]; then
+  unset APP_KEY
+  if ! grep -qE '^APP_KEY=base64:.+' .env 2>/dev/null; then
+    echo "[php-fpm] Generating APP_KEY..."
+    php artisan key:generate --force --no-interaction
+  fi
 fi
 
 echo "[php-fpm] Waiting for MariaDB..."
