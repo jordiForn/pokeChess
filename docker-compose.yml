@@ -57,8 +57,6 @@ services:
       - .env.docker
     volumes:
       - ./backend:/var/www/backend
-      - php_storage:/var/www/backend/storage
-      - php_cache:/var/www/backend/bootstrap/cache
     depends_on:
       mariadb:
         condition: service_healthy
@@ -66,11 +64,11 @@ services:
       pokechess_net:
         ipv4_address: 10.1.0.4
     healthcheck:
-      test: ["CMD-SHELL", "php-fpm-healthcheck || exit 1"]
-      interval: 15s
+      test: ["CMD-SHELL", "php -r \"exit((int)!@fsockopen('127.0.0.1', 9000));\""]
+      interval: 10s
       timeout: 5s
-      retries: 5
-      start_period: 60s
+      retries: 12
+      start_period: 300s
 
   phpmyadmin:
     image: phpmyadmin:5-apache
@@ -134,5 +132,3 @@ networks:
 
 volumes:
   mariadb_data:
-  php_storage:
-  php_cache:
