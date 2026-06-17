@@ -99,7 +99,7 @@ services:
       context: .
       dockerfile: docker/nginx/Dockerfile
       args:
-        API_URL: ${API_URL:-http://api.pokechess.local/api}
+        API_URL: ${API_URL:-/api}
     container_name: pokechess-nginx
     restart: unless-stopped
     ports:

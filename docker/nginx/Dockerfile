@@ -2,7 +2,7 @@ FROM node:22-alpine AS frontend-build
 
 WORKDIR /app
 
-ARG API_URL=http://api.pokechess.local/api
+ARG API_URL=/api
 ENV API_URL=${API_URL}
 
 COPY frontend/package.json frontend/package-lock.json ./
