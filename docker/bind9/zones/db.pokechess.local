@@ -1,12 +1,12 @@
 $TTL 604800
-@   IN SOA dns.app.local. admin.app.local. (
-        2026061001 ; Serial
+@   IN SOA dns.pokechess.local. admin.pokechess.local. (
+        2026061701 ; Serial
         604800     ; Refresh
         86400      ; Retry
         2419200    ; Expire
         604800 )   ; Minimum TTL
 
-    IN NS  dns.app.local.
+    IN NS  dns.pokechess.local.
 
 ; Servicios PokeChess (red 10.1.0.0/24)
 dns     IN A   10.1.0.2
@@ -14,5 +14,4 @@ dns     IN A   10.1.0.2
 api     IN A   10.1.0.3
 db      IN A   10.1.0.3
 
-; Alias opcionales
 www     IN CNAME @

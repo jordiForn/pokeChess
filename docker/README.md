@@ -12,13 +12,13 @@ Stack local con Docker Compose: **Angular 21**, **Laravel (PHP-FPM)**, **Nginx**
 | MariaDB     | `pokechess-mariadb`  | 10.1.0.5  | —           |
 | phpMyAdmin  | `pokechess-phpmyadmin` | 10.1.0.6 | —         |
 
-## Dominios (zona `app.local`)
+## Dominios (zona `pokechess.local`)
 
-| Dominio          | Destino              |
-|------------------|----------------------|
-| `app.local`      | Angular (Nginx)      |
-| `api.app.local`  | Laravel API (Nginx → PHP-FPM) |
-| `db.app.local`   | phpMyAdmin (Nginx proxy) |
+| Dominio                 | Destino              |
+|-------------------------|----------------------|
+| `pokechess.local`       | Angular (Nginx)      |
+| `api.pokechess.local`   | Laravel API (Nginx → PHP-FPM) |
+| `db.pokechess.local`    | phpMyAdmin (Nginx proxy) |
 
 Registros DNS apuntan a **10.1.0.3** (Nginx).
 
@@ -75,26 +75,26 @@ El entrypoint de PHP-FPM ejecuta `composer install`, `migrate` y `db:seed` en el
 ### 5. Verificar DNS desde el host
 
 ```bash
-dig @127.0.0.1 app.local +short
-dig @127.0.0.1 api.app.local +short
-dig @127.0.0.1 db.app.local +short
+dig @127.0.0.1 -p 1053 pokechess.local +short
+dig @127.0.0.1 -p 1053 api.pokechess.local +short
+dig @127.0.0.1 -p 1053 db.pokechess.local +short
 # Deben devolver: 10.1.0.3
 ```
 
 ### 6. Verificar servicios HTTP
 
 ```bash
-curl -H 'Host: api.app.local' http://127.0.0.1/up
-curl -H 'Host: api.app.local' http://127.0.0.1/api/v1/pieces
-curl -H 'Host: app.local' http://127.0.0.1/ | head
-curl -H 'Host: db.app.local' http://127.0.0.1/ | head
+curl -H 'Host: api.pokechess.local' http://127.0.0.1/up
+curl -H 'Host: api.pokechess.local' http://127.0.0.1/api/v1/pieces
+curl -H 'Host: pokechess.local' http://127.0.0.1/ | head
+curl -H 'Host: db.pokechess.local' http://127.0.0.1/ | head
 ```
 
 O en el navegador (con DNS en 127.0.0.1):
 
-- http://app.local
-- http://api.app.local/up
-- http://db.app.local
+- http://pokechess.local
+- http://api.pokechess.local/up
+- http://db.pokechess.local
 
 ### 7. Script de validación completa
 
@@ -123,7 +123,7 @@ docker-compose.yml
 .env.docker.example
 .dockerignore
 docker/
-├── bind9/          # Bind9 + zona app.local
+├── bind9/          # Bind9 + zona pokechess.local
 ├── frontend/       # Dockerfile build Angular 21
 ├── nginx/          # Dockerfile Nginx + vhosts
 ├── php-fpm/        # Dockerfile PHP-FPM + entrypoint Laravel
@@ -155,5 +155,6 @@ docker compose down -v
 ## Notas
 
 - El `backend/Dockerfile` de Railway **no se modifica**; la imagen local usa `docker/php-fpm/Dockerfile`.
-- Angular se compila en build de Nginx con `API_URL=http://api.app.local/api`.
+- Angular se compila en build de Nginx con `API_URL=http://api.pokechess.local/api`.
+- Sprites Pokémon en `frontend/public/sprites/pokemon/` (sin depender de internet).
 - Laravel se monta desde `./backend` para desarrollo; `storage` y `bootstrap/cache` usan volúmenes nombrados.

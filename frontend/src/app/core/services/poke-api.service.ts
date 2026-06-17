@@ -19,11 +19,18 @@ export class PokeApiService {
 
   prefetchSprites(pieces: Piece[]): void {
     for (const piece of pieces) {
+      if (this.isLocalSprite(piece.sprite_url)) {
+        continue;
+      }
       void this.ensureSprite(piece.pokemon_name, piece.sprite_url);
     }
   }
 
   getCachedSprite(pokemonName: string, fallbackUrl: string): string {
+    if (this.isLocalSprite(fallbackUrl)) {
+      return fallbackUrl;
+    }
+
     const cached = localStorage.getItem(this.cacheKey(pokemonName));
     if (cached) {
       return cached;
@@ -51,6 +58,10 @@ export class PokeApiService {
   }
 
   private async ensureSprite(pokemonName: string, fallbackUrl: string): Promise<void> {
+    if (this.isLocalSprite(fallbackUrl)) {
+      return;
+    }
+
     const key = this.cacheKey(pokemonName);
     const cached = localStorage.getItem(key);
     if (cached) {
@@ -70,6 +81,10 @@ export class PokeApiService {
     } catch {
       localStorage.setItem(key, fallbackUrl);
     }
+  }
+
+  private isLocalSprite(url: string): boolean {
+    return url.startsWith('/sprites/');
   }
 
   private extractSpriteUrl(data: PokeApiPokemonResponse, fallbackUrl?: string): string {
