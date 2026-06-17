@@ -15,11 +15,14 @@ RUN node scripts/set-production-env.cjs && npm run build
 FROM nginx:1.27-alpine
 
 COPY docker/nginx/nginx.conf /etc/nginx/nginx.conf
+COPY docker/nginx/ssl/ssl-params.conf /nginx/ssl/ssl-params.conf
 COPY docker/nginx/conf.d/ /etc/nginx/conf.d/
+
+RUN mkdir -p /nginx/ssl
 
 COPY --from=frontend-build /app/dist/frontend/browser /var/www/frontend/browser
 
-EXPOSE 80
+EXPOSE 80 443
 
 HEALTHCHECK --interval=20s --timeout=5s --retries=3 \
   CMD wget -qO- http://127.0.0.1/ -O /dev/null || exit 1

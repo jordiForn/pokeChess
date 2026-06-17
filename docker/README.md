@@ -7,7 +7,7 @@ Stack local con Docker Compose: **Angular 21**, **Laravel (PHP-FPM)**, **Nginx**
 | Servicio    | Contenedor           | IP        | Puerto host |
 |-------------|----------------------|-----------|-------------|
 | Bind9 (DNS) | `pokechess-dns`      | 10.1.0.2  | 53/udp,tcp  |
-| Nginx       | `pokechess-nginx`    | 10.1.0.3  | 80          |
+| Nginx       | `pokechess-nginx`    | 10.1.0.3  | 80, 443     |
 | PHP-FPM     | `pokechess-php-fpm`  | 10.1.0.4  | —           |
 | MariaDB     | `pokechess-mariadb`  | 10.1.0.5  | —           |
 | phpMyAdmin  | `pokechess-phpmyadmin` | 10.1.0.6 | —         |
@@ -20,7 +20,34 @@ Stack local con Docker Compose: **Angular 21**, **Laravel (PHP-FPM)**, **Nginx**
 | `api.pokechess.local`   | Laravel API (Nginx → PHP-FPM) |
 | `db.pokechess.local`    | phpMyAdmin (Nginx proxy) |
 
-Registros DNS apuntan a **10.1.0.3** (Nginx).
+Registros DNS apuntan a **10.1.0.3** (Nginx). HTTP redirige a HTTPS.
+
+---
+
+## HTTPS (certificado autofirmado)
+
+Certificados en `docker/nginx/ssl/` → montados en el contenedor como `/nginx/ssl/`:
+
+- `pokechess.crt`
+- `pokechess.key`
+
+Generar (una vez, en la VM o en el host):
+
+```bash
+chmod +x docker/nginx/ssl/generate-cert.sh
+./docker/nginx/ssl/generate-cert.sh
+```
+
+Levantar / rebuild:
+
+```bash
+docker compose build nginx
+docker compose up -d nginx
+```
+
+Acceso: **https://pokechess.local** (el navegador avisará del certificado autofirmado; acéptalo para desarrollo).
+
+VirtualBox NAT: reenvío **443 → 443** (desde Windows: `https://pokechess.local`).
 
 ---
 
