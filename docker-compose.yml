@@ -8,8 +8,8 @@ services:
     container_name: pokechess-dns
     restart: unless-stopped
     ports:
-      - "53:53/udp"
-      - "53:53/tcp"
+      - "1053:53/udp"
+      - "1053:53/tcp"
     volumes:
       - ./docker/bind9/zones:/etc/bind/zones:ro
     networks:
