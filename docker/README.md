@@ -70,13 +70,13 @@ sudo usermod -aG docker "$USER"
 newgrp docker
 ```
 
-### 2. Liberar puerto 53 (conflicto con systemd-resolved)
+### 2. Mapear el puerto 1053 porque el 53 está ocupado
 
 ```bash
-sudo systemctl disable --now systemd-resolved
-sudo rm -f /etc/resolv.conf
-echo "nameserver 127.0.0.1" | sudo tee /etc/resolv.conf
-echo "options edns0 trust-ad" | sudo tee -a /etc/resolv.conf
+dns:
+    ports:
+        - "1053:53/udp"
+        - "1053:53/tcp"
 ```
 
 ### 3. Clonar y configurar

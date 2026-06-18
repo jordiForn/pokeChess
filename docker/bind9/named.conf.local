@@ -2,8 +2,3 @@ zone "pokechess.local" {
     type master;
     file "/etc/bind/zones/db.pokechess.local";
 };
-
-zone "app.local" {
-    type master;
-    file "/etc/bind/zones/db.app.local";
-};

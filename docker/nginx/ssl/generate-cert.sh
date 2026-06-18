@@ -19,7 +19,7 @@ openssl req -x509 -nodes -newkey rsa:4096 \
   -out "$CRT" \
   -days "$DAYS" \
   -subj "/CN=pokechess.local/O=PokeChess/C=ES" \
-  -addext "subjectAltName=DNS:pokechess.local,DNS:www.pokechess.local,DNS:app.local,DNS:api.pokechess.local,DNS:api.app.local,DNS:db.pokechess.local,DNS:db.app.local"
+  -addext "subjectAltName=DNS:pokechess.local,DNS:www.pokechess.local,DNS:api.pokechess.local,DNS:db.pokechess.local"
 
 chmod 600 "$KEY"
 chmod 644 "$CRT"
