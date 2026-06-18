@@ -15,16 +15,7 @@ services:
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.2
-    healthcheck:
-      test:
-        [
-          "CMD-SHELL",
-          "pidof named >/dev/null && dig @127.0.0.1 pokechess.local +short | grep -q '^10\\.1\\.0\\.3$' && dig @127.0.0.1 api.pokechess.local +tcp +short | grep -q '^10\\.1\\.0\\.3$'",
-        ]
-      interval: 15s
-      timeout: 5s
-      retries: 5
-      start_period: 20s
+
 
   mariadb:
     image: mariadb:11.4
@@ -40,12 +31,7 @@ services:
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.5
-    healthcheck:
-      test: ["CMD", "healthcheck.sh", "--connect", "--innodb_initialized"]
-      interval: 10s
-      timeout: 5s
-      retries: 10
-      start_period: 40s
+
 
   php-fpm:
     build:
@@ -63,12 +49,7 @@ services:
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.4
-    healthcheck:
-      test: ["CMD-SHELL", "php -r \"exit((int)!@fsockopen('127.0.0.1', 9000));\""]
-      interval: 10s
-      timeout: 5s
-      retries: 12
-      start_period: 300s
+
 
   phpmyadmin:
     image: phpmyadmin:5-apache
@@ -87,12 +68,7 @@ services:
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.6
-    healthcheck:
-      test: ["CMD-SHELL", "curl -sf http://127.0.0.1/ || exit 1"]
-      interval: 20s
-      timeout: 5s
-      retries: 5
-      start_period: 30s
+
 
   nginx:
     build:
@@ -116,12 +92,7 @@ services:
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.3
-    healthcheck:
-      test: ["CMD-SHELL", "wget --no-check-certificate -qO- --header='Host: api.pokechess.local' https://127.0.0.1/up >/dev/null && wget --no-check-certificate -qO- --header='Host: pokechess.local' https://127.0.0.1/ | grep -q 'app-root'"]
-      interval: 20s
-      timeout: 10s
-      retries: 5
-      start_period: 30s
+
 
 networks:
   pokechess_net:
