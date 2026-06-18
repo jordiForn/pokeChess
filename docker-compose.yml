@@ -44,8 +44,7 @@ services:
     volumes:
       - ./backend:/var/www/backend
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.4
@@ -63,8 +62,7 @@ services:
       PMA_ABSOLUTE_URI: https://db.pokechess.local/
       UPLOAD_LIMIT: 64M
     depends_on:
-      mariadb:
-        condition: service_healthy
+      - mariadb
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.6
@@ -85,10 +83,8 @@ services:
       - ./backend/public:/var/www/backend/public:ro
       - ./docker/nginx/ssl:/nginx/ssl:ro
     depends_on:
-      php-fpm:
-        condition: service_healthy
-      phpmyadmin:
-        condition: service_healthy
+      - php-fpm
+      - phpmyadmin
     networks:
       pokechess_net:
         ipv4_address: 10.1.0.3
